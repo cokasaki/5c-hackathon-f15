@@ -87,33 +87,56 @@ end
 function Board:getLegalMoves(from, current, legalMoves, cap)
 	-- Can the algorithm continue?
 	if cap > 0 then
-		left = {x = current.x + 1, y = current.y}
-		right = {x = current.x - 1, y = current.y}
-		up = {x = current.x, y = current.y + 1}
-		down = {x = current.x, y = current.y - 1}
 
-		-- add the four adjacent squares
-		if isLegalMove(from, left) then
-			table.insert( legalMoves, {from, left} = true)
+		if x < c.B_LENGTH.x then
+			left = {x = current.x + 1, y = current.y}
+
+			-- add the square to legal moves
+			if isLegalMove(from, left) then
+				table.insert( legalMoves, {from, left} = true)
+			end
+
+			-- recursively find legal squares from the square
+			getLegalMoves(from, left, legalMoves, cap - 1)
 		end
 
-		if isLegalMove(from, right) then
-			table.insert( legalMoves, {from, right} = true)
+		if x > 1 then
+			right = {x = current.x - 1, y = current.y}
+
+			-- add the square to legal moves
+			if isLegalMove(from, right) then
+				table.insert( legalMoves, {from, right} = true)
+			end
+
+			-- recursively find legal squares from the square
+			getLegalMoves(from, right, legalMoves, cap - 1)
 		end
 
-		if isLegalMove(from, up) then
-			table.insert( legalMoves, {from, up} = true)
+		if y < c.B_LENGTH.y then
+			up = {x = current.x, y = current.y + 1}
+
+			-- add the square to legal moves
+			if isLegalMove(from, up) then
+				table.insert( legalMoves, {from, up} = true)
+			end
+
+			-- recursively find legal squares from the square
+			getLegalMoves(from, up, legalMoves, cap - 1)
 		end
 
-		if isLegalMove(from, down) then
-			table.insert( legalMoves, {from, down} = true)
-		end		
-		-- recursively find legal squares from each of
-		-- the four adjacent options
-		getLegalMoves(from, left, legalMoves, cap - 1)
-		getLegalMoves(from, right, legalMoves, cap - 1)
-		getLegalMoves(from, up, legalMoves, cap - 1)
-		getLegalMoves(from, down, legalMoves, cap - 1)
+
+
+		if y > 1 then
+			down = {x = current.x, y = current.y - 1}
+
+			-- add the square to legal moves
+			if isLegalMove(from, down) then
+				table.insert( legalMoves, {from, down} = true)
+			end		
+
+			-- recursively find legal squares from the square
+			getLegalMoves(from, down, legalMoves, cap - 1)
+		end
 	end
 end
 
