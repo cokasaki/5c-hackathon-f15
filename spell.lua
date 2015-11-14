@@ -2,7 +2,9 @@
 THE SPELL CLASS
 ]]
 
-Spell = class('Spell')
+require 'card'
+
+Spell = class('Spell',Card)
 
 function Spell:initialize(cost)
     self.cost = cost

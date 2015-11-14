@@ -32,6 +32,9 @@ function Board:initialize(deck1, deck2)
 
 	self.p2Deck = deck2
 	self.p2Hand = Hand(self.p2Deck)
+	self.p2Hand:draw_card()
+	self.p2Hand:draw_card()
+
 	self.winner = 0
 end
 

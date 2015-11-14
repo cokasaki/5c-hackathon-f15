@@ -59,9 +59,9 @@ function love.mousepressed(x,y,click)
     elseif on_end_turn(x,y) then
         board:register_click("end_turn")
     elseif on_hand_one(x,y) then
-        board:register_click("hand_one", get_hand_one(x,y))
+        board:register_click("hand_one", get_hand_index_one(x,y))
     elseif on_hand_two(x,y) then
-        board:register_click("hand_two", get_hand_two(x,y))
+        board:register_click("hand_two", get_hand_index_two(x,y))
     end
 
 
@@ -69,6 +69,11 @@ end
 
 
 ------------- MISCELLANEOUS FUNCTIONS ----------------
+
+
+function cart_distance(x1,y1,x2,y2)
+    return math.sqrt((x2-x1)^2 + (y2-y1)^2)
+end
 
 -- checks to see if the click occurred on the board
 function on_board(x,y)
@@ -109,60 +114,94 @@ end
 
 -- checks to see if the click occurred on player one's hand
 function on_hand_one(x,y)
-
-
+    hand_size = board.p1Hand:size()
+    positions = get_sym_pos(hand_size,c.P_ONE_HAND.y)
+    for _,pos in ipairs(positions) do 
+        if cart_distance(x,y,pos.x,pos.y) < c.RADIUS then return true end
+    end
+    return false
 end
 
 -- gets the index corresponding to a click on player one's hand
 function get_hand_index_one(x,y)
-
+    hand_size = board.p1Hand:size()
+    positions = get_sym_pos(hand_size,c.P_ONE_HAND.y)
+    for i = 1,hand_size do 
+        pos = positions[i]
+        if cart_distance(x,y,pos.x,pos.y) < c.RADIUS then return i end
+    end
 end
 
 -- checks to see if the click occurred on player two's hand
 function on_hand_two(x,y)
-
+    hand_size = board.p2Hand:size()
+    positions = get_sym_pos(hand_size,c.P_TWO_HAND.y)
+    for _,pos in ipairs(positions) do 
+        if cart_distance(x,y,pos.x,pos.y) < c.RADIUS then return true end
+    end
+    return false
 end
 
 -- gets the index corresponding to a click on player two's hand
 function get_hand_index_two(x,y)
-
+    hand_size = board.p2Hand:size()
+    positions = get_sym_pos(hand_size,c.P_TWO_HAND.y)
+    for i = 1,hand_size do 
+        pos = positions[i]
+        if cart_distance(x,y,pos.x,pos.y) < c.RADIUS then return i end
+    end
 end
 
 ---------------- DRAWING FUNCTIONS -------------------
 
+-- gets symmetric x-positions at which to draw circles
+function get_sym_pos(num,y_pos)
+    positions = {}
+    start = 0
+
+    if num%2 == 0 then
+        start = c.SCREEN_W/2 - c.SQ_LENGTH/2 - ((num/2)-1)*c.SQ_LENGTH
+    else
+        start = c.SCREEN_W/2 - (num-1)/2*c.SQ_LENGTH
+    end
+
+    for i=1,num do
+        table.insert(positions, {x = start + (i-1)*c.SQ_LENGTH, y = y_pos})
+    end
+
+    return positions
+end
+
 -- draws player one's resources to the screen
 function draw_res_one()
     love.graphics.setColor(colors.RES)
-    for i = 1, board.p1Mana, 1 do
-        if board.p1Mana % 2 == 0 then
-            love.graphics.circle(400 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
-        else
-            love.graphics.circle(375 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
-        end
+    positions = get_sym_pos(board.p1Mana,c.P_ONE_RES.y)
+    for _,pos in ipairs(positions) do
+        love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
     end
-
 end
 
 -- draws player one's hand to the screen
 function draw_hand_one()
     love.graphics.setColor(colors.P_ONE)
     hand_size = board.p1Hand:size()
-    for i = 1,hand_size do
+    positions = get_sym_pos(hand_size,c.P_ONE_HAND.y)
+    for i=1,hand_size do 
+        pos = positions[i]
         if board.turn == 1 then
-            x = c.SCREEN_W/2 + (i - hand_size)*c.SQ_LENGTH
-            y = c.P_ONE_RES.y
-            draw_card(x,y,board.p1Hand.cards[i])
+            draw_card(pos.x,pos.y,board.p1Hand.cards[i])
         else
-            love.graphics.circle("fill", c.SCREEN_W/2 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+            love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
         end
     end
 end
 
 -- draws player two's resources to the screen
 function draw_res_two()
-    love.graphics.setColor(colors.RES) 
-    for i = 1, board.p1Mana, 1 do
-        love.graphics.circle("fill", c.SCREEN_W/2 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
+    love.graphics.setColor(colors.RES)
+    positions = get_sym_pos(board.p2Mana,c.P_TWO_RES.y)
+    for _,pos in ipairs(positions) do
+        love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
     end
 end
 
@@ -170,13 +209,13 @@ end
 function draw_hand_two()
     love.graphics.setColor(colors.P_TWO)
     hand_size = board.p2Hand:size()
-    for i = 1,hand_size do
+    positions = get_sym_pos(hand_size,c.P_TWO_HAND.y)
+    for i=1,hand_size do 
+        pos = positions[i]
         if board.turn == 2 then
-            x = c.SCREEN_W/2 + (i - hand_size)*c.SQ_LENGTH
-            y = c.P_TWO_RES.y
-            draw_card(x,y,board.p2Hand.cards[i])
+            draw_card(pos.x,pos.y,board.p2Hand.cards[i])
         else
-            love.graphics.circle("fill", c.SCREEN_W/2 + (i - hand_size)*50, c.P_TWO_RES.y, c.RADIUS)
+            love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
         end
     end
 end
