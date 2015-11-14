@@ -191,15 +191,12 @@ end
 
 function Board:getLegalAttacks(from)
 	legalAttacks = {}
-	for i=1,B_LENGTH.x do
-		for j=1,B_LENGTH.y do
-			pos = {x=i,y=j}
-			card = self:get_card_at(pos)
-			if card then
-				if card.player ~= self.turn then
-					table.insert(legalAttacks,pos)
-				end
-			end
+	for _,off in ipairs(c.TWO_RANGE) do
+		x_pos = from.x + off.x
+		y_pos = from.y + off.y
+		target = {x = x_pos,y = y_pos}
+		if isLegalAttack(from, target) then
+			table.insert(legalAttacks,pos)
 		end
 	end
 
@@ -207,20 +204,29 @@ function Board:getLegalAttacks(from)
 end
 
 function Board:getLegalPlacements()
-	legalAttacks = {}
+	legalPlacements = {}
 	for i=1,B_LENGTH.x do
 		for j=1,B_LENGTH.y do
 			pos = {x=i,y=j}
 			card = self:get_card_at(pos)
-			if card then
-				if card.player ~= self.turn then
-					table.insert(legalAttacks,pos)
+			if not card then
+				for _,off in ipairs(c.ADJACENT) do
+					x_pos = from.x + off.x
+					y_pos = from.y + off.y
+					adj = {x = x_pos,y = y_pos}
+					adjCard = self:get_card_at(adj)
+					if adjCard then
+						if adjCard.player == self.turn then
+							table.insert(legalPlacements,adj)
+							break
+						end
+					end
 				end
 			end
 		end
 	end
 
-	return legalAttacks
+	return legalPlacements
 end
 
 
