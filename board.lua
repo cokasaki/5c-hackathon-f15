@@ -108,7 +108,6 @@ function Board:getLegalMovesR(from, current, legalMoves, cap)
 		end
 
 		if current.x > 1 then
-			print(x_pos,y_pos)
 			print(current.x,current.y)
 			left = {x = current.x - 1, y = current.y}
 

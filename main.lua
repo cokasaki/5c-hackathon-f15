@@ -163,6 +163,11 @@ function draw_legal_moves()
     length = c.SQ_LENGTH
 
     legal_moves = board:getLegalMoves(board.selected)
+    for k,thing in ipairs(legal_moves) do
+        print("thing")
+    end
+    print("no thing")
+
     for move,_ in ipairs(legal_moves) do
         x_pos = b.x + (move.x-1)*length
         y_pos = b.y + (move.y-1)*length
