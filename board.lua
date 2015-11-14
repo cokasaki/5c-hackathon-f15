@@ -34,6 +34,9 @@ function Board:initialize(deck1, deck2)
 
 	self.p2Deck = deck2
 	self.p2Hand = Hand(self.p2Deck)
+	self.p2Hand:draw_card()
+	self.p2Hand:draw_card()
+
 	self.winner = 0
 end
 
@@ -85,6 +88,39 @@ function Board:register_click(mode, target)
 	elseif mode == "end_turn" then
 		self:switchTurns()
 	end
+end
+
+
+function Board:summon(card, target)
+	self.selected = nil
+	self.grid[target.x][target.y] = card
+end
+
+-- Returns true if the spot target is empty
+-- and if the player whose turn it is has
+-- a card adjacent to the target square
+function Board:canSummon(target)
+	if self:get_card_at(target) then
+		return false
+	end
+
+	for _,off in ipairs(c.ADJACENT) do
+		x_pos = from.x + off.x
+		y_pos = from.y + off.y
+		to = {x = x_pos,y = y_pos}
+		if self:onBoard(to) then
+			-- Avoids trying to access member variable of nil variable
+			if self.grid[to.x][to.y] then
+				-- Checks to see if the current player has a card at this location
+				if self.grid[to.x][to.y].player == self.turn then
+					return true
+				end
+			end
+		end
+	end
+
+	return false
+
 end
 
 function Board:switchTurns()
@@ -153,6 +189,40 @@ function Board:getLegalMoves(from)
 	return legalMoves
 end
 
+function Board:getLegalAttacks(from)
+	legalAttacks = {}
+	for i=1,B_LENGTH.x do
+		for j=1,B_LENGTH.y do
+			pos = {x=i,y=j}
+			card = self:get_card_at(pos)
+			if card then
+				if card.player ~= self.turn then
+					table.insert(legalAttacks,pos)
+				end
+			end
+		end
+	end
+
+	return legalAttacks
+end
+
+function Board:getLegalPlacements()
+	legalAttacks = {}
+	for i=1,B_LENGTH.x do
+		for j=1,B_LENGTH.y do
+			pos = {x=i,y=j}
+			card = self:get_card_at(pos)
+			if card then
+				if card.player ~= self.turn then
+					table.insert(legalAttacks,pos)
+				end
+			end
+		end
+	end
+
+	return legalAttacks
+end
+
 
 function Board:isLegalAttack(from, target)
 	if self.grid[target.x][target.y] then
@@ -185,7 +255,8 @@ function Board:isLegalMove(from, to)
 	else
 	    return false
 	end
-	-- Make sure that to ~= from
-	-- Check to see if to is occupied
-	-- Make sure that distance <= 2
 end
+
+
+
+
