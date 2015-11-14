@@ -82,6 +82,7 @@ end
 function Board:canSummon(target)
 	if target then
 		return false
+	end
 
 	down = {x = current.x, y = current.y + 1}
 	-- Avoids index out of bounds

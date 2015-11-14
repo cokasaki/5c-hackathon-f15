@@ -37,8 +37,15 @@ end
 
 -- draw the game to the screen
 function love.draw()
-    if board.selected then
-        draw_legal_moves()
+    if board.selected_type 
+        if board.selected_type == "on_board" then
+            draw_legal_moves()
+            draw_legal_attacks()
+        elseif board.selected_type == "summon" then
+            draw_legal_placements()
+        elseif board.selected_type == "spell" then
+            draw_legal_targets(board.selected)
+        end
     end
     draw_grid()
     draw_cards()
@@ -262,6 +269,21 @@ function draw_legal_attacks()
         x_pos = b.x + (move.x-1)*length
         y_pos = b.y + (move.y-1)*length
         love.graphics.setColor(colors.CAN_Attack)
+        love.graphics.rectangle("fill",x_pos,y_pos,length,length)
+    end
+end
+
+function draw_legal_targets(spell)
+
+    b = {x = c.B_POS.x,y = c.B_POS.y}
+    length = c.SQ_LENGTH
+
+    legal_moves = spell:getLegalTargets(board)
+
+    for _,move in ipairs(legal_moves) do
+        x_pos = b.x + (move.x-1)*length
+        y_pos = b.y + (move.y-1)*length
+        love.graphics.setColor(colors.CAN_TARGET)
         love.graphics.rectangle("fill",x_pos,y_pos,length,length)
     end
 end
