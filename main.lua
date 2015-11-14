@@ -203,7 +203,14 @@ function draw_hand_one()
     for i=1,hand_size do 
         pos = positions[i]
         if board.turn == 1 then
-            draw_card(pos.x,pos.y,board.p1Hand.cards[i])
+            card = board.p1Hand.cards[i]
+            draw_card(pos.x,pos.y,card)
+            love.graphics.setColor(colors.GOLD)
+            love.graphics.circle("fill", pos.x, pos.y - 1.75*c.RADIUS, c.RADIUS/2)
+            love.graphics.setColor(colors.WHITE)
+            love.graphics.setBlendMode("alpha")
+            love.graphics.printf(card.cost,pos.x-c.RADIUS,pos.y-2.1*c.RADIUS,2*c.RADIUS,"center")
+            love.graphics.setBlendMode("replace")
         else
             love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
         end
@@ -227,7 +234,14 @@ function draw_hand_two()
     for i=1,hand_size do 
         pos = positions[i]
         if board.turn == 2 then
-            draw_card(pos.x,pos.y,board.p2Hand.cards[i])
+            card = board.p2Hand.cards[i]
+            draw_card(pos.x,pos.y,card)
+            love.graphics.setColor(colors.GOLD)
+            love.graphics.circle("fill", pos.x, pos.y + 1.75*c.RADIUS, c.RADIUS/2)
+            love.graphics.setColor(colors.WHITE)
+            love.graphics.setBlendMode("alpha")
+            love.graphics.printf(card.cost,pos.x-c.RADIUS,pos.y+1.4*c.RADIUS,2*c.RADIUS,"center")
+            love.graphics.setBlendMode("replace")
         else
             love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
         end
