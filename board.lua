@@ -67,7 +67,13 @@ function Board:register_click(mode, target)
 			end
 
 		elseif self.selectedType == 'fromHand' then
-			if self.hand.cards[self.selected].type = 'minion'
+			if self.turn == 1 then
+				hand = self.p1Hand
+			else
+				hand = self.p2Hand
+			end
+
+			if hand.cards[self.selected].type == 'minion' then
 				if self:canSummon(target, self.selected) then
 					self:summon(self.selected, target)
 					self.selected = nil
@@ -116,7 +122,6 @@ function Board:register_click(mode, target)
 		self:switchTurns()
 	end
 end
-
 
 function Board:summon(index, target)
 	if self.turn == 1 then
