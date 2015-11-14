@@ -67,16 +67,18 @@ function Board:register_click(mode, target)
 			end
 
 		elseif self.selectedType == 'fromHand' then
-			if self:canSummon(target, self.selected) then
-				self:summon(self.selected, target)
-				self.selected = nil
-				self.selectedType = nil
+			if self.hand.cards[self.selected].type = 'minion'
+				if self:canSummon(target, self.selected) then
+					self:summon(self.selected, target)
+					self.selected = nil
+					self.selectedType = nil
+				end
+			else --handle spell
+				if canCast(target, self.selected) then
+					cast(self.selected, target)
+				end
 			end
-
---		elseif self.selectedType == 'spell'
---			if canCast(selected, target) then
---				self:cast(selected, target)
---			end
+		
 		else
 			self.selected = nil
 			self.selectedType = nil
@@ -220,17 +222,13 @@ function Board:switchTurns()
 	if self.turn == 1 then
 		self.turn = 2
 		self.p2Mana = self.p2maxMana
-		if self.p1Hand.size() < 6 then
-			self.p1Hand:draw_card();
-		if self.p1Hand.size() < 6 then
-			self.p1Hand:draw_card();
+		self.p1Hand:draw_card()
+		self.p1Hand:draw_card()
 	else
 		self.turn = 1
 		self.p1Mana = self.p1maxMana
-		if self.p2Hand.size() < 6 then
-			board.p2Hand:draw_card();
-		if self.p2Hand.size() < 6 then
-			board.p2Hand:draw_card();
+		board.p2Hand:draw_card()
+		board.p2Hand:draw_card()
 	end
 	self.devMana = true
 	for i = 1, c.B_LENGTH.x do
@@ -262,7 +260,6 @@ function Board:makeAttack(from, to)
 	if attacker.c_health < 1 then
 		if attacker.type == 'summoner' then
 			if self.winner ~= 0 then
-				print "hmm"
 				self.winner = 3
 			else
 				if self.turn == 1 then

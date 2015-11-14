@@ -39,9 +39,6 @@ function love.load(arg)
                   Card(1,1,1,2,"minion"),
                   Card(1,1,1,2,"minion"),})
 
-
-
-
     board = Board(deck1, deck2)
 end
 
