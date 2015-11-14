@@ -13,10 +13,10 @@ function Board:initialize(deck1, deck2)
         	self.grid[i][j] = nil -- Fill the values here
     	end
 	end
-	BlueLeader = Card(0, 2, 25, 1)
-	RedLeader = Card(0, 2, 25, 2)
-	self.grid[1][3] = RedLeader
-	self.grid[9][3] = BlueLeader
+	BlueLeader = Card(0, 2, 10, 1)
+	RedLeader = Card(0, 2, 10, 2)
+	self.grid[1][3] = BlueLeader
+	self.grid[9][3] = RedLeader
 
 	self.turn = 1
 
@@ -33,23 +33,29 @@ function Board:initialize(deck1, deck2)
 end
 
 function Board:get_card_at(point)
+	print(x)
+	print(y)
 	return self.grid[point.x][point.y]
 end
 
-function Board:register_click(mode, action)
+function Board:register_click(mode, target)
 	if mode == "board" then
-		if (not self.selected and self.grid[action.x][action.y]) then
-			self.selected = action
-		
-		elseif self.selected then
-			if self.selected == action then
-				self.selected = nil
-			elseif self:isLegalMove(self.selected, action) then
-				self:move(self.selected, action)
-			elseif self:isLegalAttack(self.selected,action) then
-				self:makeAttack(self.selected,action)
-			end
 
+		if self.grid[target.x][target.y] then 
+			--We select our own unit
+			if self:get_card_at(target).player == self.turn then
+				self.selected = target
+			--Or we selected an enemy unit
+			elseif self.selected and self:isLegalAttack(self.selected, target) then
+					self:makeAttack(self.selected, target)
+			else
+				self.selected=nil
+			end
+		--Or tried to move
+		elseif self.selected and self:isLegalMove(self.selected, target) then
+			self:move(self.selected, target)
+		--Or we delselect
+		else
 			self.selected = nil
 		end
 	
@@ -64,13 +70,16 @@ function Board:makeAttack(from, to)
 	attacker = self.grid[from.x][from.y]
 	defender = self.grid[to.x][to.y]
 	
-	defender.c_health = defender.c_health - attacker.c_attack
-	attacker.c_health = attacker.c_health - defender.c_attack
+	defender:updateHP(-1*attacker.c_attack)
+	attacker:updateHP(-1*defender.c_attack)
+
+	self.selected = nil
 end
 
 function Board:move(from, to)
 	self.grid[to.x][to.y] = self.grid[from.x][from.y]
 	self.grid[from.x][from.y] = nil
+	self.selected = nil
 end
 
 function Board:getLegalMoves(from)
@@ -165,7 +174,7 @@ function Board:isLegalAttack(from, target)
 		if from_card.player == target_card.player then
 			return false
 		else
-			return math.abs(from.x - target.x) == 1 or math.abs(from.y - target.y) == 1
+			return math.abs(from.x - target.x) <= 1 and math.abs(from.y - target.y) <= 1
 		end
 	else
 		return false
@@ -181,6 +190,7 @@ function Board:onBoard(point)
 end
 
 function Board:isLegalMove(from, to)
+	return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
 	dist = self:distance(from, to)
 	if dist >= 1 and dist <=2 and not self.grid[to.x][to.y] then
 		return true
@@ -190,4 +200,8 @@ function Board:isLegalMove(from, to)
 	-- Make sure that to ~= from
 	-- Check to see if to is occupied
 	-- Make sure that distance <= 2
+end
+
+function Board:isLegalMoveR(from, to, current, cap)
+
 end
