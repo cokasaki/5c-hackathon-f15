@@ -70,7 +70,11 @@ end
 
 -- Helper function
 function Board:getLegalMoves(from, legalMoves, cap)
-
+	to = (from.x + 1, from.y)
+	table.insert(legalMoves
+	to = (from.x, from.y)
+	to = (from.x + 1, from.y)
+	to = (from.x + 1, from.y)
 end
 
 function Board:isLegalAttack(from, target)
