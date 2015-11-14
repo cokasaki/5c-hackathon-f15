@@ -1,5 +1,6 @@
 local class = require 'lib/middleclass'
 require 'card'
+require 'hand'
 require 'constants'
 
 Board = class('Board')
@@ -23,26 +24,33 @@ function Board:initialize(deck1, deck2)
 	self.p2Mana = 0
 
 	self.selected = nil
-	--self.p1Hand = Hand()
-	--self.p1Hand.draw()
+	self.p1Deck = deck1
+	self.p1Hand = Hand(self.p1Deck)
+	self.p1Hand:draw_card()
+
+	self.p2Deck = deck2
+	self.p2Hand = Hand(self.p2Deck)
 end
 
-function Board:get_card_at(x, y)
-	return self.grid[x][y]
+function Board:get_card_at(point)
+	return self.grid[point.x][point.y]
 end
 
 function Board:register_click(mode, action)
 	if mode == "board" then
-		if (not self.selected and self.grid[action[1]][action[2]]) then
+		if (not self.selected and self.grid[action.x][action.y]) then
 			self.selected = action
 		
 		elseif self.selected then
-			if self:isLegalMove(self.selected, action) then
+			if self.selected == action then
+				self.selected = nil
+			elseif self:isLegalMove(self.selected, action) then
 				self:move(self.selected, action)
-			end
 			elseif self:isLegalAttack(self.selected,action) then
 				self:makeAttack(self.selected,action)
 			end
+
+			self.selected = nil
 		end
 	
 	elseif mode == "hand_one" then
@@ -52,14 +60,90 @@ function Board:register_click(mode, action)
 	end
 end
 
-function Board:makeAttack(from, to):
+function Board:makeAttack(from, to)
 	attacker = self.grid[from.x][from.y]
 	defender = self.grid[to.x][to.y]
 	
-	defender.c_Health = defender.c_Health - attacker.c_attack
-	attacker.c_Health = attacker.c_attack - defender.c_attack
+	defender.c_health = defender.c_health - attacker.c_attack
+	attacker.c_health = attacker.c_health - defender.c_attack
+end
 
 function Board:move(from, to)
-	self.grid[to[1][to[2]] = self.grid[from[1]][from[2]]
-	self.grid[from[1]][from[2]] = nil
+	self.grid[to.x][to.y] = self.grid[from.x][from.y]
+	self.grid[from.x][from.y] = nil
+end
+
+function Board:getLegalMoves(from)
+	legalMoves = {}
+	-- Call recursive helper function
+	self:getLegalMoves(from, from, legalMoves, 2)
+
+	return legalMoves
+end
+
+-- recursive helper function that keeps track of the cap
+-- and adds legal moves to legalMoves "in place"
+-- Disregards illegal moves and avoids duplicates
+function Board:getLegalMoves(from, current, legalMoves, cap)
+	-- Can the algorithm continue?
+	if cap > 0 then
+		left = (current.x + 1, current.y)
+		right = (current.x - 1, current.y)
+		up = (current.x, current.y + 1)
+		down = (current.x, current.y - 1)
+
+		-- add the four adjacent squares
+		if isLegalMove(from, left) then
+			table.insert( (legalMoves, left) = true)
+		end
+
+		if isLegalMove(from, right) then
+			table.insert( (legalMoves, right) = true)
+		end
+
+		if isLegalMove(from, up) then
+			table.insert( (legalMoves, up) = true)
+		end
+
+		if isLegalMove(from, down) then
+			table.insert( (legalMoves, down) = true)
+		end		
+		-- recursively find legal squares from each of
+		-- the four adjacent options
+		getLegalMoves(from, left, legalMoves, cap - 1)
+		getLegalMoves(from, right, legalMoves, cap - 1)
+		getLegalMoves(from, up, legalMoves, cap - 1)
+		getLegalMoves(from, down, legalMoves, cap - 1)
+	end
+end
+
+
+function Board:isLegalAttack(from, target)
+	if self.grid[target.x][target.y] then
+		from_card = self:get_card_at(from)
+		target_card = self:get_card_at(target)
+		if from_card.player == target_card.player then
+			return false
+		else
+			return math.abs(from.x - target.x) == 1 or math.abs(from.y - target.y) == 1
+		end
+	else
+		return false
+	end
+end
+
+function Board:distance(from, to)
+	return math.abs(from.x - to.x) + math.abs(from.y - to.y)
+end
+
+function Board:isLegalMove(from, to)
+	distance = self:distance(from, to)
+	if distance >= 1 and distance <=2 and self.grid[to.x][to.y] == nil then
+		return true
+	else
+		return false
+	end
+	-- Make sure that to ~= from
+	-- Check to see if to is occupied
+	-- Make sure that distance <= 2
 end
