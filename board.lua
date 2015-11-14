@@ -85,9 +85,7 @@ end
 function Board:getLegalMoves(from)
 	legalMoves = {}
 	-- Call recursive helper function
-	self:getLegalMovesR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
-
-	return legalMoves
+	return self:getLegalMovesR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
 end
 
 -- recursive helper function that keeps track of the cap
@@ -102,15 +100,19 @@ function Board:getLegalMovesR(from, current, legalMoves, cap)
 
 			-- add the square to legal moves
 			if self:isLegalMove(from, right) then
+				print("a")
 				legalMoves[right] = true
+				for k,thing in ipairs(legalMoves) do
+        			print(k)
+    			end
 			end
 
 			-- recursively find legal squares from the square
-			self:getLegalMovesR(from, right, legalMoves, cap - 1)
+			legalMoves = self:getLegalMovesR(from, right, legalMoves, cap - 1)
 		end
 
 		if current.x > 1 then
-			print(current.x,current.y)
+			print("b")
 			left = {x = current.x - 1, y = current.y}
 
 			-- add the square to legal moves
@@ -119,10 +121,11 @@ function Board:getLegalMovesR(from, current, legalMoves, cap)
 			end
 
 			-- recursively find legal squares from the square
-			self:getLegalMovesR(from, left, legalMoves, cap - 1)
+			legalMoves = self:getLegalMovesR(from, left, legalMoves, cap - 1)
 		end
 
 		if current.y < c.B_LENGTH.y then
+			print("c")
 			down = {x = current.x, y = current.y + 1}
 
 			-- add the square to legal moves
@@ -131,12 +134,13 @@ function Board:getLegalMovesR(from, current, legalMoves, cap)
 			end
 
 			-- recursively find legal squares from the square
-			self:getLegalMovesR(from, down, legalMoves, cap - 1)
+			legalMoves = self:getLegalMovesR(from, down, legalMoves, cap - 1)
 		end
 
 
 
 		if current.y > 1 then
+			print("d")
 			up = {x = current.x, y = current.y - 1}
 
 			-- add the square to legal moves
@@ -145,9 +149,11 @@ function Board:getLegalMovesR(from, current, legalMoves, cap)
 			end		
 
 			-- recursively find legal squares from the square
-			self:getLegalMovesR(from, up, legalMoves, cap - 1)
+			legalMoves = self:getLegalMovesR(from, up, legalMoves, cap - 1)
 		end
 	end
+
+	return legalMoves
 end
 
 
@@ -158,7 +164,7 @@ function Board:isLegalAttack(from, target)
 		if from_card.player == target_card.player then
 			return false
 		else
-			return math.abs(from.x - target.x) == 1 or math.abs(from.y - target.y) == 1
+			return math.abs(from.x - target.x) <= 1 and math.abs(from.y - target.y) <= 1
 		end
 	else
 		return false
