@@ -40,9 +40,11 @@ function love.draw()
     if board.selected then
         draw_legal_moves()
     end
-    draw_board()
+    draw_grid()
+    draw_cards()
     draw_hand_one()
     draw_hand_two()
+    draw_end_turn()
     draw_res_one()
     draw_res_two()
 end
@@ -54,6 +56,8 @@ function love.mousepressed(x,y,click)
 
     if on_board(x,y) then
         board:register_click("board", get_board_index(x,y))
+    elseif on_end_turn(x,y) then
+        board:register_click("end_turn")
     elseif on_hand_one(x,y) then
         board:register_click("hand_one", get_hand_one(x,y))
     elseif on_hand_two(x,y) then
@@ -92,6 +96,15 @@ function get_board_index(x,y)
     return {x = math.ceil(b_x/c.SQ_LENGTH),
             y = math.ceil(b_y/c.SQ_LENGTH)}
 
+end
+
+-- checks to see if the click occured on the end-turn button
+function on_end_turn(x,y)
+    x_corner = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
+    y_corner = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
+
+    return x > x_corner and x < x_corner + c.SQ_LENGTH and
+           y > y_corner and y < y_corner + c.SQ_LENGTH
 end
 
 -- checks to see if the click occurred on player one's hand
@@ -164,7 +177,7 @@ function draw_legal_moves()
 
     legal_moves = board:getLegalMoves(board.selected)
 
-    for move,_ in ipairs(legal_moves) do
+    for _,move in ipairs(legal_moves) do
         x_pos = b.x + (move.x-1)*length
         y_pos = b.y + (move.y-1)*length
         love.graphics.setColor(colors.HIGHLIGHTED)
@@ -172,8 +185,8 @@ function draw_legal_moves()
     end
 end
 
--- draws the board to the screen
-function draw_board()
+-- draws the grid to the screen
+function draw_grid()
     b = {x = c.B_POS.x,y = c.B_POS.y}
     length = c.SQ_LENGTH
 
@@ -186,14 +199,37 @@ function draw_board()
             love.graphics.setColor(colors.WHITE)
             love.graphics.rectangle("line",x_pos,y_pos,length,length)
 
-            draw_card({x = i,y = j})
+        end
+    end
+end
+
+-- draws all the cards to the screen
+function draw_cards()
+    b = {x = c.B_POS.x,y = c.B_POS.y}
+    length = c.SQ_LENGTH
+
+    for i=1,c.B_LENGTH.x do
+        for j=1,c.B_LENGTH.y do
+
+            x_pos = b.x + (i-1)*length
+            y_pos = b.y + (j-1)*length
+            draw_card(x_pos,y_pos,{x = i,y = j})
 
         end
     end
 end
 
+-- draws the endturn button to the screen
+function draw_end_turn()
+    x = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
+    y = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
+
+    love.graphics.setColor(colors.BUTTON)
+    love.graphics.rectangle("fill",x,y,c.SQ_LENGTH,c.SQ_LENGTH)
+end
+
 -- draws a card at a particular position
-function draw_card(pos)
+function draw_card(x_off,y_off,pos)
     -- draw anything that exists in that space
     contents = board:get_card_at(pos)
     if contents then
@@ -203,8 +239,8 @@ function draw_card(pos)
         else 
             love.graphics.setColor(colors.P_TWO)
         end
-        c_x = x_pos + length/2
-        c_y = y_pos + length/2
+        c_x = x_off + length/2
+        c_y = y_off + length/2
         love.graphics.circle("fill",c_x,c_y,c.RADIUS)
 
         -- draw the card's stats

@@ -33,8 +33,6 @@ function Board:initialize(deck1, deck2)
 end
 
 function Board:get_card_at(point)
-	print(x)
-	print(y)
 	return self.grid[point.x][point.y]
 end
 
@@ -84,78 +82,19 @@ end
 
 function Board:getLegalMoves(from)
 	legalMoves = {}
-	-- Call recursive helper function
-	return self:getLegalMovesR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
-end
-
--- recursive helper function that keeps track of the cap
--- and adds legal moves to legalMoves "in place"
--- Disregards illegal moves and avoids duplicates
-function Board:getLegalMovesR(from, current, legalMoves, cap)
-	-- Can the algorithm continue?
-	if cap > 0 then
-
-		if current.x < c.B_LENGTH.x then
-			right = {x = current.x + 1, y = current.y}
-
-			-- add the square to legal moves
-			if self:isLegalMove(from, right) then
-				print("a")
-				legalMoves[right] = true
-				for k,thing in ipairs(legalMoves) do
-        			print(k)
-    			end
+	for _,off in ipairs(c.TWO_RANGE) do
+		x_pos = from.x + off.x
+		y_pos = from.y + off.y
+		to = {x = x_pos,y = y_pos}
+		if self:onBoard(to) then
+			if self:isLegalMove(from,to) then
+				table.insert(legalMoves, to)
 			end
-
-			-- recursively find legal squares from the square
-			legalMoves = self:getLegalMovesR(from, right, legalMoves, cap - 1)
-		end
-
-		if current.x > 1 then
-			print("b")
-			left = {x = current.x - 1, y = current.y}
-
-			-- add the square to legal moves
-			if self:isLegalMove(from, left) then
-				legalMoves[left] = true
-			end
-
-			-- recursively find legal squares from the square
-			legalMoves = self:getLegalMovesR(from, left, legalMoves, cap - 1)
-		end
-
-		if current.y < c.B_LENGTH.y then
-			print("c")
-			down = {x = current.x, y = current.y + 1}
-
-			-- add the square to legal moves
-			if self:isLegalMove(from, down) then
-				legalMoves[down] = true
-			end
-
-			-- recursively find legal squares from the square
-			legalMoves = self:getLegalMovesR(from, down, legalMoves, cap - 1)
-		end
-
-
-
-		if current.y > 1 then
-			print("d")
-			up = {x = current.x, y = current.y - 1}
-
-			-- add the square to legal moves
-			if self:isLegalMove(from, up) then
-				legalMoves[up] = true
-			end		
-
-			-- recursively find legal squares from the square
-			legalMoves = self:getLegalMovesR(from, up, legalMoves, cap - 1)
 		end
 	end
 
 	return legalMoves
 end
-
 
 function Board:isLegalAttack(from, target)
 	if self.grid[target.x][target.y] then
@@ -173,6 +112,10 @@ end
 
 function Board:distance(from, to)
 	return math.abs(from.x - to.x) + math.abs(from.y - to.y)
+end
+
+function Board:onBoard(point)
+	return point.x >= 1 and point.x <= c.B_LENGTH.x and point.y >= 1 and point.y <= c.B_LENGTH.y
 end
 
 function Board:isLegalMove(from, to)
