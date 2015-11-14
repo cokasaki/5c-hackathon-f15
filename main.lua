@@ -34,11 +34,11 @@ end
 function love.mousepressed(x,y,click)
 
     if on_board(x,y) then
-        board.register_click("board", get_board_index(x,y))
+        board:register_click("board", get_board_index(x,y))
     elseif on_hand_one(x,y) then
-        board.register_click("hand_one", get_hand_one(x,y))
+        board:register_click("hand_one", get_hand_one(x,y))
     elseif on_hand_two(x,y) then
-        board.register_click("hand_two", get_hand_two(x,y))
+        board:register_click("hand_two", get_hand_two(x,y))
     end
 
 
@@ -99,22 +99,34 @@ end
 
 -- draws player one's resources to the screen
 function draw_res_one()
+    love.graphics.setColor(colors.RES)
+    for i = 1, board.p1Mana, 1 do
+        if board.p1Mana % 2 == 0 then
+            love.graphics.circle(400 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+        else
+            love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
     
 end
 
 -- draws player one's hand to the screen
 function draw_hand_one()
-    
+    love.graphics.setColor(colors.P_ONE)
+    for i = 1, board.p1Mana, 1 do
+        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
 end
 
 -- draws player two's resources to the screen
 function draw_res_two()
-    
+    love.graphics.setColor(colors.RES) 
+    for i = 1, board.p1Mana, 1 do
+        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
 end
 
 -- draws player two's hand to the screen
 function draw_hand_two()
-    
+    love.graphics.setColor(colors.P_TWO)
+   for i = 1, board.p1Mana, 1 do
+        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
 end
 
 -- draws the board to the screen
@@ -146,8 +158,12 @@ function draw_board()
 
                 -- draw the card's stats
                 att = contents.attack
-                def = contents.health
-                love.graphics.printf(att.."/"..def,c_x-c.RADIUS,c_y,2*c.RADIUS,"center")
+                hp = contents.health
+                stat_string = att.."/"..hp
+                love.graphics.setColor(colors.WHITE)
+                love.graphics.setBlendMode("alpha")
+                love.graphics.printf(stat_string,c_x-c.RADIUS,c_y-c.TEXT_OFFSET,2*c.RADIUS,"center")
+                love.graphics.setBlendMode("replace")
             end
         end
     end
