@@ -155,7 +155,7 @@ function Board:isLegalAttack(from, target)
 		if from_card.player == target_card.player then
 			return false
 		else
-			return math.abs(from.x - target.x) == 1 or math.abs(from.y - target.y) == 1
+			return math.abs(from.x - target.x) <= 1 and math.abs(from.y - target.y) <= 1
 		end
 	else
 		return false
