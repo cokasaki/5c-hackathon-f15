@@ -144,10 +144,10 @@ end
 function Board:switchTurns()
 	if self.turn == 1 then
 		self.turn = 2
-		self.p2Mana = p2maxMana
+		self.p2Mana = self.p2maxMana
 	else
 		self.turn = 1
-		self.p1Mana = p1maxMana
+		self.p1Mana = self.p1maxMana
 	end
 	for i = 1, c.B_LENGTH.x do
     	for j = 1, c.B_LENGTH.y do

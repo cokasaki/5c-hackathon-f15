@@ -274,7 +274,7 @@ function draw_legal_attacks()
     for _,move in ipairs(legal_moves) do
         x_pos = b.x + (move.x-1)*length
         y_pos = b.y + (move.y-1)*length
-        love.graphics.setColor(colors.CAN_Attack)
+        love.graphics.setColor(colors.CAN_ATTACK)
         love.graphics.rectangle("fill",x_pos,y_pos,length,length)
     end
 end
