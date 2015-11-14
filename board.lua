@@ -28,7 +28,7 @@ function Board:initialize(deck1, deck2)
 	self.p1Mana = 2
 	self.p2Mana = 3
 
-	self.devMana = false
+	self.devMana = true
 
 	self.selected = nil
 	self.selectedType = nil
@@ -103,8 +103,8 @@ function Board:register_click(mode, target)
 				self.p1maxMana = self.p1maxMana + 1
 				self.devMana = false
 				self.p1Hand:remove_card(target)
-				board.selected = nil
-				board.selectedType = nil
+				self.selected = nil
+				self.selectedType = nil
 			else
 				self.selected = target
 				self.selectedType = 'fromHand'
@@ -113,12 +113,12 @@ function Board:register_click(mode, target)
 
 	elseif mode == "hand_two" then
 		if self.turn == 2 then
-			if self.selected == target and self.devMana and self.p1maxMana < 9 then
+			if self.selected == target and self.devMana and self.p2maxMana < 9 then
 				self.p2maxMana = self.p2maxMana + 1
-				self.devMana = false
+				self.devMana = true
 				self.p2Hand:remove_card(target)
-				board.selected = nil
-				board.selectedType = nil
+				self.selected = nil
+				self.selectedType = nil
 			else
 				self.selected = target
 				self.selectedType = 'fromHand'
