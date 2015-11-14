@@ -33,6 +33,8 @@ function Board:initialize(deck1, deck2)
 end
 
 function Board:get_card_at(point)
+	print(x)
+	print(y)
 	return self.grid[point.x][point.y]
 end
 
