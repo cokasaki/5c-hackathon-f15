@@ -73,6 +73,7 @@ end
 
 
 function Board:summon(card, target)
+	self.selected = nil
 	self.grid[target.x][target.y] = card
 end
 
