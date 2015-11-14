@@ -67,16 +67,18 @@ function Board:register_click(mode, target)
 			end
 
 		elseif self.selectedType == 'fromHand' then
-			if self:canSummon(target, self.selected) then
-				self:summon(self.selected, target)
-				self.selected = nil
-				self.selectedType = nil
+			if self.hand.cards[self.selected].type = 'minion'
+				if self:canSummon(target, self.selected) then
+					self:summon(self.selected, target)
+					self.selected = nil
+					self.selectedType = nil
+				end
+			else --handle spell
+				if canCast(target, self.selected) then
+					cast(self.selected, target)
+				end
 			end
-
---		elseif self.selectedType == 'spell'
---			if canCast(selected, target) then
---				self:cast(selected, target)
---			end
+		
 		else
 			self.selected = nil
 			self.selectedType = nil
