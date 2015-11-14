@@ -69,8 +69,14 @@ function Board:register_click(mode, target)
 				self.selectedType = nil
 			end
 
-		elseif self.selectedType == "fromHand" then
-			if self.hand.cards[self.selected].type == 'minion' then
+		elseif self.selectedType == 'fromHand' then
+			if self.turn == 1 then
+				hand = self.p1Hand
+			else
+				hand = self.p2Hand
+			end
+
+			if hand.cards[self.selected].type == 'minion' then
 				if self:canSummon(target, self.selected) then
 					self:summon(self.selected, target)
 					self.selected = nil
@@ -120,7 +126,6 @@ function Board:register_click(mode, target)
 	end
 end
 
-
 function Board:summon(index, target)
 	if self.turn == 1 then
 		hand = self.p1Hand
@@ -169,6 +174,51 @@ function Board:canSummon(target, cardIndex)
 			end
 		end
 	end
+
+	return false
+
+end
+
+function Board:cast(index, target)
+	-- Only applies to minions
+	-- check cost
+	if self.turn == 1 then
+		hand = self.p1Hand
+	else
+		hand = self.p2Hand
+	end
+	spellCard = hand.cards[index]
+	targetCard = self.grid[target.x][target.y]
+	targetCard.attack = targetCard.attack + spellCard.attack
+	targetCard.health = targetCard.health + spellCard.health
+	
+	hand:remove_card(index)
+	self.selected = nil
+end
+
+-- Returns true if the spot target is empty
+-- and if the player whose turn it is has
+-- a card adjacent to the target square
+function Board:canCast(target, cardIndex)
+	if self.turn == 1 then
+		if self.p1Hand.cards[cardIndex].cost > self.p1Mana then
+			return false
+		end
+	else
+		if self.p2Hand.cards[cardIndex].cost > self.p2Mana then
+			return false
+		end
+	end
+
+	if not self:get_card_at(target) then
+		return false
+	end
+
+	targetCard = self.grid[target.x][target.y]
+
+	if targetCard.type == "minion" then
+		return true
+	end		
 
 	return false
 

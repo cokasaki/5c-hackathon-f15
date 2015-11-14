@@ -39,9 +39,6 @@ function love.load(arg)
                   Card(1,1,1,2,"minion"),
                   Card(1,1,1,2,"minion"),})
 
-
-
-
     board = Board(deck1, deck2)
 end
 
@@ -147,8 +144,8 @@ function on_end_turn(x,y)
     x_corner = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
     y_corner = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
 
-    return x > x_corner and x < x_corner + c.SQ_LENGTH and
-           y > y_corner and y < y_corner + c.SQ_LENGTH
+    return x > x_corner and x < (x_corner + c.SQ_LENGTH) and
+           y > y_corner and y < (y_corner + c.SQ_LENGTH)
 end
 
 -- checks to see if the click occurred on player one's hand
