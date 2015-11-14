@@ -74,17 +74,37 @@ function Board:move(from, to)
 end
 
 function Board:getLegalMoves(from)
-	return getLegalMoves(from, {}, 2)
+	legalMoves = {}
+	-- Call recursive helper function
+	self:getLegalMoves(from, legalMoves, 2)
+	return legalMoves
 end
 
--- Helper function
--- function Board:getLegalMoves(from, legalMoves, cap)
--- 	to = (from.x + 1, from.y)
--- 	table.insert(legalMoves)
--- 	to = (from.x, from.y)
--- 	to = (from.x + 1, from.y)
--- 	to = (from.x + 1, from.y)
--- end
+-- recursive helper function that keeps track of the cap
+-- and adds legal moves to legalMoves "in place"
+function Board:getLegalMoves(from, legalMoves, cap)
+	-- Can the algorithm continue?
+	if cap > 0 then
+		left = (from.x + 1, from.y)
+		right = (from.x - 1, from.y)
+		up = (from.x, from.y + 1)
+		down = (from.x, from.y - 1)
+
+		-- add the four adjacent squares
+		table.insert( (legalMoves, left) = true)
+		table.insert( (legalMoves, right) = true)
+		table.insert( (legalMoves, up) = true)
+		table.insert( (legalMoves, down) = true)
+
+		-- recursively find legal squares from each of
+		-- the four adjacent options
+		getLegalMoves(left, legalMoves, cap - 1)
+		getLegalMoves(right, legalMoves, cap - 1)
+		getLegalMoves(up, legalMoves, cap - 1)
+		getLegalMoves(down, legalMoves, cap - 1)
+	end
+end
+
 
 function Board:isLegalAttack(from, target)
 	if self.grid[target.x][target.y] then
