@@ -174,6 +174,7 @@ function Board:isLegalMoveR(from, to, current, cap)
 		end
 		return false
 	elseif cap == 0 then
+		-- If the current square is the destination square
 		if current.x == to.x and current.y = to.y and not self.grid[to.x][to.y] then
 			return true
 		end
