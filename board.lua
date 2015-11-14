@@ -94,26 +94,26 @@ end
 function Board:getLegalMoves(from, current, legalMoves, cap)
 	-- Can the algorithm continue?
 	if cap > 0 then
-		left = (current.x + 1, current.y)
-		right = (current.x - 1, current.y)
-		up = (current.x, current.y + 1)
-		down = (current.x, current.y - 1)
+		left = {x = current.x + 1, y = current.y}
+		right = {x = current.x - 1, y = current.y}
+		up = {x = current.x, y = current.y + 1}
+		down = {x = current.x, y = current.y - 1}
 
 		-- add the four adjacent squares
 		if isLegalMove(from, left) then
-			table.insert( (legalMoves, left) = true)
+			table.insert( legalMoves, {from, left} = true)
 		end
 
 		if isLegalMove(from, right) then
-			table.insert( (legalMoves, right) = true)
+			table.insert( legalMoves, {from, right} = true)
 		end
 
 		if isLegalMove(from, up) then
-			table.insert( (legalMoves, up) = true)
+			table.insert( legalMoves, {from, up} = true)
 		end
 
 		if isLegalMove(from, down) then
-			table.insert( (legalMoves, down) = true)
+			table.insert( legalMoves, {from, down} = true)
 		end		
 		-- recursively find legal squares from each of
 		-- the four adjacent options
