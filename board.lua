@@ -76,7 +76,7 @@ end
 function Board:getLegalMoves(from)
 	legalMoves = {}
 	-- Call recursive helper function
-	self:getLegalMoves(from, from, legalMoves, 2)
+	self:getLegalMovesR(from, from, legalMoves, 2)
 
 	return legalMoves
 end
@@ -84,7 +84,7 @@ end
 -- recursive helper function that keeps track of the cap
 -- and adds legal moves to legalMoves "in place"
 -- Disregards illegal moves and avoids duplicates
-function Board:getLegalMoves(from, current, legalMoves, cap)
+function Board:getLegalMovesR(from, current, legalMoves, cap)
 	-- Can the algorithm continue?
 	if cap > 0 then
 		left = {x = current.x + 1, y = current.y}
@@ -93,27 +93,27 @@ function Board:getLegalMoves(from, current, legalMoves, cap)
 		down = {x = current.x, y = current.y - 1}
 
 		-- add the four adjacent squares
-		if isLegalMove(from, left) then
-			table.insert( legalMoves, {from, left} = true)
+		if self:isLegalMove(from, left) then
+			legalMoves[left] = true
 		end
 
-		if isLegalMove(from, right) then
-			table.insert( legalMoves, {from, right} = true)
+		if self:isLegalMove(from, right) then
+			legalMoves[right] = true
 		end
 
-		if isLegalMove(from, up) then
-			table.insert( legalMoves, {from, up} = true)
+		if self:isLegalMove(from, up) then
+			legalMoves[up] = true
 		end
 
-		if isLegalMove(from, down) then
-			table.insert( legalMoves, {from, down} = true)
+		if self:isLegalMove(from, down) then
+			legalMoves[down] = true
 		end		
 		-- recursively find legal squares from each of
 		-- the four adjacent options
-		getLegalMoves(from, left, legalMoves, cap - 1)
-		getLegalMoves(from, right, legalMoves, cap - 1)
-		getLegalMoves(from, up, legalMoves, cap - 1)
-		getLegalMoves(from, down, legalMoves, cap - 1)
+		getLegalMovesR(from, left, legalMoves, cap - 1)
+		getLegalMovesR(from, right, legalMoves, cap - 1)
+		getLegalMovesR(from, up, legalMoves, cap - 1)
+		getLegalMovesR(from, down, legalMoves, cap - 1)
 	end
 end
 
@@ -137,8 +137,8 @@ function Board:distance(from, to)
 end
 
 function Board:isLegalMove(from, to)
-	distance = self:distance(from, to)
-	if distance >= 1 and distance <=2 and self.grid[to.x][to.y] == nil then
+	dist = self:distance(from, to)
+	if dist >= 1 and dist <=2 and not self.grid[to.x][to.y] then
 		return true
 	else
 		return false

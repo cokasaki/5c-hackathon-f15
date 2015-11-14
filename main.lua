@@ -37,7 +37,14 @@ end
 
 -- draw the game to the screen
 function love.draw()
+    if board.selected then
+        draw_legal_moves()
+    end
     draw_board()
+    draw_hand_one()
+    draw_hand_two()
+    draw_res_one()
+    draw_res_two()
 end
 
 
@@ -115,9 +122,9 @@ function draw_res_one()
     love.graphics.setColor(colors.RES)
     for i = 1, board.p1Mana, 1 do
         if board.p1Mana % 2 == 0 then
-            love.graphics.circle(400 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+            love.graphics.circle(400 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
         else
-            love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+            love.graphics.circle(375 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
         end
     end
     
@@ -126,9 +133,9 @@ end
 -- draws player one's hand to the screen
 function draw_hand_one()
     love.graphics.setColor(colors.P_ONE)
-    hand_size = board.p1Hand.size()
+    hand_size = board.p1Hand:size()
     for i = 1, hand_size, 1 do
-        love.graphics.circle(375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+        love.graphics.circle("fill", 375 + (i - hand_size)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
     end
 end
 
@@ -136,16 +143,31 @@ end
 function draw_res_two()
     love.graphics.setColor(colors.RES) 
     for i = 1, board.p1Mana, 1 do
-        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+        love.graphics.circle("fill", 375 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
     end
 end
 
 -- draws player two's hand to the screen
 function draw_hand_two()
     love.graphics.setColor(colors.P_TWO)
-    hand_size = board.p2Hand.size()
+    hand_size = board.p2Hand:size()
    for i = 1, hand_size, 1 do
-        love.graphics.circle(375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+        love.graphics.circle("fill", 375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+    end
+end
+
+-- fuck stems
+function draw_legal_moves()
+
+    b = {x = c.B_POS.x,y = c.B_POS.y}
+    length = c.SQ_LENGTH
+
+    legal_moves = board:getLegalMoves(board.selected)
+    for move,_ in ipairs(legal_moves) do
+        x_pos = b.x + (move.x-1)*length
+        y_pos = b.y + (move.y-1)*length
+        love.graphics.setColor(colors.HIGHLIGHTED)
+        love.graphics.rectangle("fill",x_pos,y_pos,length,length)
     end
 end
 
