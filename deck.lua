@@ -12,11 +12,12 @@ function Deck:initialize(deck)
 end
 
 function Deck:draw_card()
-    return table.remove()
+    to_return = table.remove(self.cards)
+    return to_return
 end
 
 function Deck:empty()
-    return (#self.cards > 0)
+    return #self.cards == 0
 end
 
 function Deck:size()
