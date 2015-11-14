@@ -1,10 +1,11 @@
 c = 
 {
-    SCREEN_W = 550,
-    SCREEN_H = 750,
+    SCREEN_W = 750,
+    SCREEN_H = 600,
     B_POS = {x = 150,y = 150},
     SQ_LENGTH = 50,
-    B_LENGTH = {x = 5, y = 9},
+    RADIUS = 20,
+    B_LENGTH = {x = 9, y = 5},
     P_ONE_HAND = {y = 50},
     P_TWO_HAND = {y = 550},
     P_ONE_RES = {y = 100},
@@ -15,4 +16,6 @@ colors =
 {
     WHITE = {255,255,255,255},
     RED   = {255,0  ,0  ,255},
+    P_ONE = {255,0  ,0  ,255},
+    P_TWO = {0  ,0  ,255,255},
 }

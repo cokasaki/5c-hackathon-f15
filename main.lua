@@ -9,20 +9,17 @@ require 'constants'
 
 -- initialize everything at the start of the game
 function love.load(arg)
+    love.graphics.setBlendMode("replace")
     board = 0
     p_one = 0
     p_two = 0
-    click_record = {nil,nil}
 end
 
 
 
 -- update the game through a timestep 'dt'
 function love.update(dt)
-    if click_record[1] and click_record[2] then
-        board.try_turn(click_record)
-        click_record = {nil,nil}
-    end
+    -- do nothing
 end
 
 
@@ -38,12 +35,13 @@ end
 function love.mousepressed(x,y,click)
 
     if on_board(x,y) then
-        if not click_record[1] then
-            click_record[1] = get_board_index(x,y)
-        elseif not click_record[2] then
-            click_record[2] = get_board_index(x,y)
-        end
+        board.register_click("board", get_board_index(x,y))
+    elseif on_hand_one(x,y) then
+        board.register_click("hand_one", get_hand_one(x,y))
+    elseif on_hand_two(x,y) then
+        board.register_click("hand_two", get_hand_two(x,y))
     end
+
 
 end
 
@@ -74,16 +72,27 @@ function get_board_index(x,y)
     b_y = y - c.B_POS.y
 
     return {math.ceil(b_x/c.SQ_LENGTH),math.ceil(b_y/c.SQ_LENGTH)}
-    
-end
-
--- checks to see if the click occurred on a hand
-function on_hand(x,y)
 
 end
 
--- gets the index corresponding to a click on a hand
-function get_hand_index(x,y)
+-- checks to see if the click occurred on player one's hand
+function on_hand_one(x,y)
+
+
+end
+
+-- gets the index corresponding to a click on player one's hand
+function get_hand_index_one(x,y)
+
+end
+
+-- checks to see if the click occurred on player two's hand
+function on_hand_two(x,y)
+
+end
+
+-- gets the index corresponding to a click on player two's hand
+function get_hand_index_two(x,y)
 
 end
 
@@ -105,8 +114,27 @@ function draw_board()
             -- draw a rectangle to delineate the space
             x_pos = b.x + (i-1)*length
             y_pos = b.y + (j-1)*length
-            love.graphics.setColor(colors.RED)
+            love.graphics.setColor(colors.WHITE)
             love.graphics.rectangle("line",x_pos,y_pos,length,length)
+
+            -- draw anything that exists in that space
+            contents = board.get_card_at(i,j)
+            if contents then
+                -- draw a circle for the card
+                if contents.player == 1 then
+                    love.graphics.setColor(colors.P_ONE)
+                else 
+                    love.graphics.setColor(colors.P_TWO)
+                end
+                c_x = x_pos + length/2
+                c_y = y_pos + length/2
+                love.graphics.circle("fill",c_x,c_y,c.RADIUS)
+
+                -- draw the card's stats
+                att = contents.attack
+                def = contents.def
+                love.graphics.printf(att.."/"..def,c_x-c.RADIUS,c_y,2*c.RADIUS,"center")
+            end
         end
     end
 end
