@@ -73,7 +73,7 @@ end
 
 
 function Board:summon(card, target)
-
+	self.grid[target.x][target.y] = card
 end
 
 -- Returns true if the spot target is empty
