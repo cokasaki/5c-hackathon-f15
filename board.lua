@@ -117,7 +117,13 @@ end
 -- Returns true if the spot target is empty
 -- and if the player whose turn it is has
 -- a card adjacent to the target square
-function Board:canSummon(target)
+function Board:canSummon(target, cardIndex)
+	if self.turn == 1 then
+		if self.p1Hand[cardIndex].cost > self.p1Mana then
+			return false
+	else
+		if self.p2Hand[cardIndex].cost > self.p2Mana then
+			return false
 	if self:get_card_at(target) then
 		return false
 	end
