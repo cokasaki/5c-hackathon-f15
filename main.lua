@@ -416,12 +416,14 @@ function draw_card_on_grid(x_off,y_off,pos)
 end
 
 function draw_winner(winner)
+    love.graphics.setColor(colors.WHITE)
+    love.graphics.setBlendMode("alpha")
     if winner == 1 then
-        love.graphics.printf("PLAYER ONE WINS", 0, c.SCREEN_H/2, c.SCREEN_W, "center")
+        love.graphics.printf("PLAYER ONE WINS", 0, c.SCREEN_H/2, c.SCREEN_W, "center") --,0,10,10)
     elseif winner == 2 then
-        love.graphics.printf("PLAYER ONE WINS", 0, c.SCREEN_H/2, c.SCREEN_W, "center")
+        love.graphics.printf("PLAYER TWO WINS", 0, c.SCREEN_H/2, c.SCREEN_W, "center") --,0,10,10)
     else
-        love.graphics.printf("I'M TIRED AND THIS GAME IS TIED", 0, c.SCREEN_H/2, c.SCREEN_W, "center")
+        love.graphics.printf("I'M TIRED AND THIS GAME IS TIED", 0, c.SCREEN_H/2, c.SCREEN_W, "center") --,0,10,10)
     end
 end
 

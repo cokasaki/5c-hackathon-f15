@@ -199,18 +199,20 @@ function Board:makeAttack(from, to)
 	defender:updateHP(-1*attacker.c_attack)
 	attacker:updateHP(-1*defender.c_attack)
 
-	if attacker.c_health < 1 then
-		if attacker.type == 'summoner' then
-			self.winner = self.turn
-		self.grid[from.x][from.y] = nil
-	end
-
 	if defender.c_health < 1 then
 		if defender.type == 'summoner' then
-			if not self.winner == 0 then
+			self.winner = self.turn
+		end
+		self.grid[to.x][to.y] = nil
+	end
+
+	if attacker.c_health < 1 then
+		if attacker.type == 'summoner' then
+			if self.winner ~= 0 then
+				print "hmm"
 				self.winner = 3
 			else
-				if self.turn == 1
+				if self.turn == 1 then
 					self.winner = 2
 				else
 					self.winner = 1
@@ -218,7 +220,7 @@ function Board:makeAttack(from, to)
 			end
 		end
 
-		self.grid[to.x][to.y] = nil
+		self.grid[from.x][from.y] = nil
 	end
 
 	attacker.canAttack = false
@@ -227,6 +229,7 @@ function Board:makeAttack(from, to)
 	self.selected = nil
 	self.selectedType = nil
 end
+
 
 function Board:move(from, to)
 	cardToMove = self.grid[from.x][from.y]
