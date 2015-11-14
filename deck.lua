@@ -12,7 +12,8 @@ function Deck:initialize(deck)
 end
 
 function Deck:draw_card()
-    to_return = table.remove(self.cards)
+    index = math.random(1,#self.cards)
+    to_return = table.remove(self.cards,index)
     return to_return
 end
 
