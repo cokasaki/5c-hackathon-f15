@@ -15,35 +15,34 @@ function love.load(arg)
     love.graphics.setBlendMode("replace")
 
     -- Cost: 2 -> 6
-    -- 
+    -- 1: 2 1 2: 3, 2; 2, 3 3: 4, 3; 3, 4, 4: 4, 5. 5: 4, 8; 5, 6
+    -- Add negative spells
 
-    deck1 = Deck({Card(1,1,1,1,"minion"),
-                  Card(2,2,2,1,"spell"),
-                  Card(2,2,2,1,"spell"),
-                  Card(3,3,3,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(2,2,2,1,"spell"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(2,2,2,1,"spell"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"spell"),})
+    deck1 = Deck({Card(4,4,4,1,"minion"),
+                  Card(1,2,1,1,"minion"),
+                  Card(3,4,3,1,"minion"),
+                  Card(2,-2,1,1,"spell"),
+                  Card(4,5,3,1,"spell"),
+                  Card(2,3,2,1,"minion"),
+                  Card(2,2,3,1,"minion"),
+                  Card(5,4,8,1,"minion"),
+                  Card(1,1,2,1,"spell"),
+                  Card(3,3,4,1,"minion"),
+                  Card(5,-4,-5,1,"spell"),
+                  Card(4,4,4,1,"minion"),})
 
-    deck2 = Deck({Card(1,1,1,2,"minion"),
-                  Card(2,2,2,2,"spell"),
-                  Card(2,2,2,2,"spell"),
-                  Card(3,3,3,2,"minion"),
-                  Card(1,1,1,2,"minion"),
-                  Card(2,2,2,2,"spell"),
-                  Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"minion"),
-                  Card(2,2,2,2,"spell"),
-                  Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"spell"),})
+    deck2 = Deck({Card(1,2,1,2,"minion"),
+                  Card(4,5,3,2,"spell"),
+                  Card(2,3,2,2,"minion"),
+                  Card(4,4,4,2,"minion"),
+                  Card(2,2,3,2,"minion"),
+                  Card(5,-4,-5,2,"spell"),
+                  Card(3,3,4,2,"minion"),
+                  Card(3,4,3,2,"minion"),
+                  Card(2,-2,1,2,"spell"),
+                  Card(4,4,4,2,"minion"),
+                  Card(1,1,2,2,"spell"),
+                  Card(5,4,8,2,"minion"),})
 
     board = Board(deck1, deck2)
 end
