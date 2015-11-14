@@ -65,15 +65,17 @@ function Board:move(from, to)
 end
 
 function Board:getLegalMoves(from)
-	legalMoves = {}
-
+	return getLegalMoves(from, {}, 2)
 end
 
 -- Helper function
-function Board:getLegalMoves(from, cap)
+function Board:getLegalMoves(from, legalMoves, cap)
 
 end
 
+function Board:isLegalAttack(from, target)
+	return math.abs(from.x - target.x) == 1 or math.abs(from.y - target.y) == 1
+end
 
 function Board:distance(from, to)
 	return math.abs(from.x - to.x) + math.abs(from.y - to.y)
