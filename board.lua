@@ -228,6 +228,24 @@ function Board:getLegalMoves(from)
 	return legalMoves
 end
 
+function Board:getLegalAttacks()
+	legalAttacks = {}
+	for i=1,B_LENGTH.x do
+		for j=1,B_LENGTH.y do
+			pos = {x=i,y=j}
+			card = self:get_card_at(pos)
+			if card then
+				if card.player ~= self.turn then
+					table.insert(legalAttacks,pos)
+				end
+			end
+		end
+	end
+
+	return legalAttacks
+end
+
+
 
 function Board:isLegalAttack(from, target)
 	if self.grid[target.x][target.y] then

@@ -37,14 +37,16 @@ end
 
 -- draw the game to the screen
 function love.draw()
-    if board.selected_type 
+    if board.selected_type then
         if board.selected_type == "on_board" then
             draw_legal_moves()
             draw_legal_attacks()
         elseif board.selected_type == "from_hand" then
-            draw_legal_placements()
-        elseif board.selected_type == "spell" then
-            draw_legal_targets(board.selected)
+            if board.selected.type == "minion" then
+                draw_legal_placements()
+            else 
+                draw_legal_targets(board.selected)
+            end
         end
     end
     draw_grid()
