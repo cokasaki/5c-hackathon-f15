@@ -82,10 +82,13 @@ function Board:register_click(mode, target)
 					self.selected = nil
 					self.selectedType = nil
 				end
+
 			else --handle spell
 				if self:canCast(target, self.selected) then
 					self:cast(self.selected, target)
 				end
+			self.selected = nil
+			self.selectedType = nil
 			end
 		
 		else
