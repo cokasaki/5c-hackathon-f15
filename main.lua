@@ -34,11 +34,11 @@ end
 function love.mousepressed(x,y,click)
 
     if on_board(x,y) then
-        board.register_click("board", get_board_index(x,y))
+        board:register_click("board", get_board_index(x,y))
     elseif on_hand_one(x,y) then
-        board.register_click("hand_one", get_hand_one(x,y))
+        board:register_click("hand_one", get_hand_one(x,y))
     elseif on_hand_two(x,y) then
-        board.register_click("hand_two", get_hand_two(x,y))
+        board:register_click("hand_two", get_hand_two(x,y))
     end
 
 

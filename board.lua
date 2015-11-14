@@ -33,7 +33,7 @@ end
 
 function Board:register_click(mode, action)
 	if mode == "board" then
-		if (not self.selected and grid[action[1]][action[2]]) then
+		if (not self.selected and self.grid[action[1]][action[2]]) then
 			self.selected = action
 		elseif self.selected then
 			self:move(self.selected, action)
