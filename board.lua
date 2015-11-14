@@ -85,77 +85,17 @@ function Board:canSummon(target)
 		return false
 	end
 
-	down = {x = current.x, y = current.y + 1}
-	-- Avoids index out of bounds
-	if y > 0 then
-		-- Avoids trying to access member variable of nil variable
-		if self.grid[down.x][down.y] then
-			-- Checks to see if the current player has a card at this location
-			if self.grid[down.x][down.y].player == self.turn then
-				return true
-			end
-		end
-	end
-	down_right = {x = current.x + 1, y = current.y + 1}
-	if y > 0 and x <= c.B_LENGTH.x then
-		if self.grid[down_right.x][down_right.y] then
-			if self.grid[down_right.x][down_right.y].player == self.turn then
-				return true
-			end
-		end
-	end
-
-
-	right = {x = current.x + 1, y = current.y}
-	if x <= c.B_LENGTH.x then
-		if self.grid[right.x][right.y] then
-			if self.grid[right.x][right.y].player == self.turn then
-				return true
-			end
-		end
-	end
-
-	up_right = {x = current.x + 1, y = current.y- 1}
-	if y <= c.B_LENGTH.y and x <= c.B_LENGTH.x then
-		if self.grid[up_right.x][up_right.y] then
-			if self.grid[up_right.x][up_right.y].player == self.turn then
-				return true
-			end
-		end
-	end
-
-	up  = {x = current.x , y = current.y - 1}
-	if y <= c.B_LENGTH.y then
-		if self.grid[up.x][up.y] then
-			if self.grid[up.x][up.y].player == self.turn then
-				return true
-			end
-		end
-	end
-
-	up_left = {x = current.x - 1, y = current.y - 1}
-	if x > 0 and y <= c.B_LENGTH.y then
-		if self.grid[up_left.x][up_left.y] then
-			if self.grid[up_left.x][up_left.y].player == self.turn then
-				return true
-			end
-		end
-	end
-
-	left = {x = current.x - 1, y = current.y}
-	if x > 0 then
-		if self.grid[left.x][left.y] then
-			if self.grid[left.x][left.y].player == self.turn then
-				return true
-			end
-		end
-	end
-
-	down_left = {x = current.x - 1, y = current.y + 1}
-	if x > 0 and y > 0 then
-		if self.grid[down_left.x][down_left.y] then
-			if self.grid[down_left.x][down_left.y].player == self.turn then
-				return true
+	for _,off in ipairs(c.ADJACENT) do
+		x_pos = from.x + off.x
+		y_pos = from.y + off.y
+		to = {x = x_pos,y = y_pos}
+		if self:onBoard(to) then
+			-- Avoids trying to access member variable of nil variable
+			if self.grid[to.x][to.y] then
+				-- Checks to see if the current player has a card at this location
+				if self.grid[to.x][to.y].player == self.turn then
+					return true
+				end
 			end
 		end
 	end
