@@ -175,17 +175,13 @@ function Board:switchTurns()
 	if self.turn == 1 then
 		self.turn = 2
 		self.p2Mana = self.p2maxMana
-		if self.p1Hand.size() < 6 then
-			self.p1Hand:draw_card();
-		if self.p1Hand.size() < 6 then
-			self.p1Hand:draw_card();
+		self.p1Hand:draw_card()
+		self.p1Hand:draw_card()
 	else
 		self.turn = 1
 		self.p1Mana = self.p1maxMana
-		if self.p2Hand.size() < 6 then
-			board.p2Hand:draw_card();
-		if self.p2Hand.size() < 6 then
-			board.p2Hand:draw_card();
+		board.p2Hand:draw_card()
+		board.p2Hand:draw_card()
 	end
 	self.devMana = true
 	for i = 1, c.B_LENGTH.x do
@@ -217,7 +213,6 @@ function Board:makeAttack(from, to)
 	if attacker.c_health < 1 then
 		if attacker.type == 'summoner' then
 			if self.winner ~= 0 then
-				print "hmm"
 				self.winner = 3
 			else
 				if self.turn == 1 then
