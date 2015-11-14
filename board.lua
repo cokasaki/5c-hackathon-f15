@@ -334,6 +334,23 @@ function Board:getLegalAttacks(from)
 	return legalAttacks
 end
 
+function Board:getLegalTargets()
+	legalTargets = {}
+	for i=1,c.B_LENGTH.x do
+		for j=1,c.B_LENGTH.y do
+			pos = {x=i,y=j}
+			card = self:get_card_at(pos)
+			if card then
+				if card.player == board.turn then
+					table.insert(legalTargets,pos)
+				end
+			end
+		end
+	end
+
+	return legalTargets
+end
+
 function Board:getLegalPlacements()
 	legalPlacements = {}
 	for i=1,c.B_LENGTH.x do

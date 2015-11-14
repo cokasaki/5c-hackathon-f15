@@ -79,6 +79,8 @@ function love.draw()
             if hand.cards[board.selected].type == "minion" or 
                hand.cards[board.selected].type == "summoner" then
                 draw_legal_placements()
+            elseif hand.cards[board.selected].type == "spell" then
+                draw_legal_targets()
             end
         end
     end
@@ -332,16 +334,16 @@ function draw_legal_attacks()
     end
 end
 
-function draw_legal_targets(spell)
+function draw_legal_targets()
 
     b = {x = c.B_POS.x,y = c.B_POS.y}
     length = c.SQ_LENGTH
 
-    legal_moves = spell:getLegalTargets(board)
+    legal_targets = board:getLegalTargets()
 
-    for _,move in ipairs(legal_moves) do
-        x_pos = b.x + (move.x-1)*length
-        y_pos = b.y + (move.y-1)*length
+    for _,target in ipairs(legal_targets) do
+        x_pos = b.x + (target.x-1)*length
+        y_pos = b.y + (target.y-1)*length
         love.graphics.setColor(colors.CAN_TARGET)
         love.graphics.rectangle("fill",x_pos,y_pos,length,length)
     end
