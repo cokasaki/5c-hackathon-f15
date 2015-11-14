@@ -76,7 +76,7 @@ end
 function Board:getLegalMoves(from)
 	legalMoves = {}
 	-- Call recursive helper function
-	self:getLegalMovesR(from, from, legalMoves, 2)
+	self:getLegalMovesR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
 
 	return legalMoves
 end
@@ -88,54 +88,56 @@ function Board:getLegalMovesR(from, current, legalMoves, cap)
 	-- Can the algorithm continue?
 	if cap > 0 then
 
-		if x < c.B_LENGTH.x then
-			left = {x = current.x + 1, y = current.y}
+		if current.x < c.B_LENGTH.x then
+			right = {x = current.x + 1, y = current.y}
 
 			-- add the square to legal moves
-			if isLegalMove(from, left) then
-				table.insert( legalMoves, {from, left} = true)
+			if self:isLegalMove(from, right) then
+				legalMoves[right] = true
 			end
 
 			-- recursively find legal squares from the square
-			getLegalMoves(from, left, legalMoves, cap - 1)
+			self:getLegalMovesR(from, right, legalMoves, cap - 1)
 		end
 
-		if x > 1 then
-			right = {x = current.x - 1, y = current.y}
+		if current.x > 1 then
+			print(x_pos,y_pos)
+			print(current.x,current.y)
+			left = {x = current.x - 1, y = current.y}
 
 			-- add the square to legal moves
-			if isLegalMove(from, right) then
-				table.insert( legalMoves, {from, right} = true)
+			if self:isLegalMove(from, left) then
+				legalMoves[left] = true
 			end
 
 			-- recursively find legal squares from the square
-			getLegalMoves(from, right, legalMoves, cap - 1)
+			self:getLegalMovesR(from, left, legalMoves, cap - 1)
 		end
 
-		if y < c.B_LENGTH.y then
-			up = {x = current.x, y = current.y + 1}
+		if current.y < c.B_LENGTH.y then
+			down = {x = current.x, y = current.y + 1}
 
 			-- add the square to legal moves
-			if isLegalMove(from, up) then
-				table.insert( legalMoves, {from, up} = true)
+			if self:isLegalMove(from, down) then
+				legalMoves[down] = true
 			end
 
 			-- recursively find legal squares from the square
-			getLegalMoves(from, up, legalMoves, cap - 1)
+			self:getLegalMovesR(from, down, legalMoves, cap - 1)
 		end
 
 
 
-		if y > 1 then
-			down = {x = current.x, y = current.y - 1}
+		if current.y > 1 then
+			up = {x = current.x, y = current.y - 1}
 
 			-- add the square to legal moves
-			if isLegalMove(from, down) then
-				table.insert( legalMoves, {from, down} = true)
+			if self:isLegalMove(from, up) then
+				legalMoves[up] = true
 			end		
 
 			-- recursively find legal squares from the square
-			getLegalMoves(from, down, legalMoves, cap - 1)
+			self:getLegalMovesR(from, up, legalMoves, cap - 1)
 		end
 	end
 end
