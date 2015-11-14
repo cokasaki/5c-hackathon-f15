@@ -202,7 +202,7 @@ function Board:getLegalAttacks(from)
 		x_pos = from.x + off.x
 		y_pos = from.y + off.y
 		target = {x = x_pos,y = y_pos}
-		if isLegalAttack(from, target) then
+		if self:isLegalAttack(from, target) then
 			table.insert(legalAttacks,pos)
 		end
 	end
@@ -238,15 +238,19 @@ end
 
 
 function Board:isLegalAttack(from, target)
-	if self.grid[target.x][target.y] then
-		from_card = self:get_card_at(from)
-		target_card = self:get_card_at(target)
-		if not from_card.canAttack then
-			return false 
-		elseif from_card.player == target_card.player then
-			return false
+	if self:onBoard(target) then
+		if self.grid[target.x][target.y] then
+			from_card = self:get_card_at(from)
+			target_card = self:get_card_at(target)
+			if not from_card.canAttack then
+				return false 
+			elseif from_card.player == target_card.player then
+				return false
+			else
+				return math.abs(from.x - target.x) <= 1 and math.abs(from.y - target.y) <= 1
+			end
 		else
-			return math.abs(from.x - target.x) <= 1 and math.abs(from.y - target.y) <= 1
+			return false
 		end
 	else
 		return false

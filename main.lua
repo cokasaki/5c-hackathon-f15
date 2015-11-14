@@ -37,15 +37,23 @@ end
 
 -- draw the game to the screen
 function love.draw()
-    if board.selected_type then
-        if board.selected_type == "on_board" then
+    if board.selectedType then
+        if board.selectedType == "onBoard" then
             draw_legal_moves()
             draw_legal_attacks()
-        elseif board.selected_type == "from_hand" then
-            if board.selected.type == "minion" then
-                draw_legal_placements()
+        elseif board.selectedType == "fromHand" then
+            if board.turn then
+                hand = board.p1Hand
             else 
-                draw_legal_targets(board.selected)
+                hand = board.p2Hand
+            end
+
+            print(hand)
+
+            if hand.cards[board.selected].type == "minion" then
+                draw_legal_placements()
+            -- else 
+            --     draw_legal_targets(board.selected)
             end
         end
     end
@@ -265,7 +273,7 @@ function draw_legal_attacks()
     b = {x = c.B_POS.x,y = c.B_POS.y}
     length = c.SQ_LENGTH
 
-    legal_moves = board:getLegalAttacks()
+    legal_moves = board:getLegalAttacks(board.selected)
 
     for _,move in ipairs(legal_moves) do
         x_pos = b.x + (move.x-1)*length
