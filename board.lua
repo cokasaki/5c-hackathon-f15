@@ -161,6 +161,8 @@ function Board:onBoard(point)
 end
 
 function Board:isLegalMove(from, to)
+	return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
+	--[[
 	dist = self:distance(from, to)
 	if dist >= 1 and dist <=2 and not self.grid[to.x][to.y] and self:get_card_at(from).canMove then
 	    return true
@@ -170,4 +172,53 @@ function Board:isLegalMove(from, to)
 	-- Make sure that to ~= from
 	-- Check to see if to is occupied
 	-- Make sure that distance <= 2
+	--]]
+end
+
+function Board:isLegalMoveR(from, to, current, cap)
+	-- Can the algorithm continue?
+	if cap > 0 then
+
+		-- Going off the board could not possibly be legal
+		if current.x < c.B_LENGTH.x then
+			right = {x = current.x + 1, y = current.y}
+			-- Cannot traverse past a square occupied by an opponent
+			if self.grid[right.x][right.y].player ~= 2 - ((self.turn + 1) % 2) then
+				return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, {x = right.x, y = right.y}, cap - 1)
+			end
+		end
+
+		-- Going off the board could not possibly be legal
+		if current.x > 1 then
+			left = {x = current.x - 1, y = current.y}
+			-- Cannot traverse past a square occupied by an opponent
+			if self.grid[left.x][left.y].player ~= 2 - ((self.turn + 1) % 2) then
+				return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, {x = left.x, y = left.y}, cap - 1)
+			end
+		end
+
+		-- Going off the board could not possibly be legal
+		if current.y < c.B_LENGTH.y then
+			down = {x = current.x, y = current.y + 1}
+			-- Cannot traverse past a square occupied by an opponent
+			if self.grid[down.x][down.y].player ~= 2 - ((self.turn + 1) % 2) then
+				return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, {x = down.x, y = down.y}, cap - 1)
+			end
+		end
+
+		-- Going off the board could not possibly be legal
+		if current.y > 1 then
+			up = {x = current.x, y = current.y - 1}
+			-- Cannot traverse past a square occupied by an opponent
+			if self.grid[up.x][up.y].player ~= 2 - ((self.turn + 1) % 2) then
+				return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, {x = up.x, y = up.y}, cap - 1)
+			end
+		end
+		return false
+	elseif cap == 0 then
+		-- If the current square is the destination square
+		if current.x == to.x and current.y = to.y and not self.grid[to.x][to.y] then
+			return true
+		end
+	end
 end
