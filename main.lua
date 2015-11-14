@@ -140,15 +140,21 @@ function draw_res_one()
             love.graphics.circle(375 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
         end
     end
-    
+
 end
 
 -- draws player one's hand to the screen
 function draw_hand_one()
     love.graphics.setColor(colors.P_ONE)
     hand_size = board.p1Hand:size()
-    for i = 1, hand_size, 1 do
-        love.graphics.circle("fill", 375 + (i - hand_size)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
+    for i = 1,hand_size do
+        if board.turn == 1 then
+            x = c.SCREEN_W/2 + (i - hand_size)*c.SQ_LENGTH
+            y = c.P_ONE_RES.y
+            draw_card(x,y,board.p1Hand.cards[i])
+        else
+            love.graphics.circle("fill", c.SCREEN_W/2 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+        end
     end
 end
 
@@ -156,7 +162,7 @@ end
 function draw_res_two()
     love.graphics.setColor(colors.RES) 
     for i = 1, board.p1Mana, 1 do
-        love.graphics.circle("fill", 375 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
+        love.graphics.circle("fill", c.SCREEN_W/2 + (i - board.p1Mana)*c.SQ_LENGTH, c.P_ONE_RES.y, c.RADIUS)
     end
 end
 
@@ -164,8 +170,14 @@ end
 function draw_hand_two()
     love.graphics.setColor(colors.P_TWO)
     hand_size = board.p2Hand:size()
-   for i = 1, hand_size, 1 do
-        love.graphics.circle("fill", 375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+    for i = 1,hand_size do
+        if board.turn == 2 then
+            x = c.SCREEN_W/2 + (i - hand_size)*c.SQ_LENGTH
+            y = c.P_TWO_RES.y
+            draw_card(x,y,board.p2Hand.cards[i])
+        else
+            love.graphics.circle("fill", c.SCREEN_W/2 + (i - hand_size)*50, c.P_TWO_RES.y, c.RADIUS)
+        end
     end
 end
 
@@ -213,7 +225,7 @@ function draw_cards()
 
             x_pos = b.x + (i-1)*length
             y_pos = b.y + (j-1)*length
-            draw_card(x_pos,y_pos,{x = i,y = j})
+            draw_card_on_grid(x_pos,y_pos,{x = i,y = j})
 
         end
     end
@@ -226,31 +238,43 @@ function draw_end_turn()
 
     love.graphics.setColor(colors.BUTTON)
     love.graphics.rectangle("fill",x,y,c.SQ_LENGTH,c.SQ_LENGTH)
+    love.graphics.setColor(colors.WHITE)
+    love.graphics.setColor(colors.WHITE)
+    love.graphics.setBlendMode("alpha")
+    love.graphics.printf("END TURN",x,y+(1/4)*c.SQ_LENGTH,c.SQ_LENGTH,"center")
+    love.graphics.setBlendMode("replace")
 end
 
 -- draws a card at a particular position
-function draw_card(x_off,y_off,pos)
+function draw_card(x,y,card)
+    -- draw a circle for the card
+    if card.player == 1 then
+        love.graphics.setColor(colors.P_ONE)
+    else 
+        love.graphics.setColor(colors.P_TWO)
+    end
+    love.graphics.circle("fill",x,y,c.RADIUS)
+
+    -- draw the card's stats
+    att = card.attack
+    hp = card.c_health
+    stat_string = att.."/"..hp
+    love.graphics.setColor(colors.WHITE)
+    love.graphics.setBlendMode("alpha")
+    love.graphics.printf(stat_string,x-c.RADIUS,y-c.TEXT_OFFSET,2*c.RADIUS,"center")
+    love.graphics.setBlendMode("replace")
+end
+
+-- draws a card onto the board
+function draw_card_on_grid(x_off,y_off,pos)
     -- draw anything that exists in that space
     contents = board:get_card_at(pos)
+    length = c.SQ_LENGTH
     if contents then
-        -- draw a circle for the card
-        if contents.player == 1 then
-            love.graphics.setColor(colors.P_ONE)
-        else 
-            love.graphics.setColor(colors.P_TWO)
-        end
+        -- draw the card
         c_x = x_off + length/2
         c_y = y_off + length/2
-        love.graphics.circle("fill",c_x,c_y,c.RADIUS)
-
-        -- draw the card's stats
-        att = contents.attack
-        hp = contents.c_health
-        stat_string = att.."/"..hp
-        love.graphics.setColor(colors.WHITE)
-        love.graphics.setBlendMode("alpha")
-        love.graphics.printf(stat_string,c_x-c.RADIUS,c_y-c.TEXT_OFFSET,2*c.RADIUS,"center")
-        love.graphics.setBlendMode("replace")
+        draw_card(c_x,c_y,contents)
     end
 end
 
