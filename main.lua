@@ -82,7 +82,8 @@ function get_board_index(x,y)
     b_x = x - c.B_POS.x
     b_y = y - c.B_POS.y
 
-    return {x = math.ceil(b_x/c.SQ_LENGTH),y = math.ceil(b_y/c.SQ_LENGTH)}
+    return {x = math.ceil(b_x/c.SQ_LENGTH),
+            y = math.ceil(b_y/c.SQ_LENGTH)}
 
 end
 
@@ -145,23 +146,7 @@ function draw_hand_two()
     hand_size = board.p2Hand.size()
    for i = 1, hand_size, 1 do
         love.graphics.circle(375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
-    end--[[
-THE CARD CLASS
-]]
-
-class = require 'lib/middleclass'
-
-Card = class('Card')
-
--- set the cards attributes and stats
-function Card:initialize(cost, attack, health, player)
-    self.cost = cost
-    self.attack = attack
-    self.health = health
-    self.player = player
-    self.current_attack = attack
-    self.current_health = health
-end
+    end
 end
 
 -- draws the board to the screen
@@ -178,16 +163,16 @@ function draw_board()
             love.graphics.setColor(colors.WHITE)
             love.graphics.rectangle("line",x_pos,y_pos,length,length)
 
-            draw_card(i,j)
-            end
+            draw_card({x = i,y = j})
+
         end
     end
 end
 
 -- draws a card at a particular position
-function draw_card(x,y)
+function draw_card(pos)
     -- draw anything that exists in that space
-    contents = board:get_card_at(x,y)
+    contents = board:get_card_at(pos)
     if contents then
         -- draw a circle for the card
         if contents.player == 1 then
@@ -201,10 +186,12 @@ function draw_card(x,y)
 
         -- draw the card's stats
         att = contents.attack
-        hp = contents.health
+        hp = contents.c_health
         stat_string = att.."/"..hp
         love.graphics.setColor(colors.WHITE)
         love.graphics.setBlendMode("alpha")
         love.graphics.printf(stat_string,c_x-c.RADIUS,c_y-c.TEXT_OFFSET,2*c.RADIUS,"center")
         love.graphics.setBlendMode("replace")
+    end
 end
+
