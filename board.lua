@@ -76,32 +76,44 @@ end
 function Board:getLegalMoves(from)
 	legalMoves = {}
 	-- Call recursive helper function
-	self:getLegalMoves(from, legalMoves, 2)
+	self:getLegalMoves(from, from, legalMoves, 2)
+
 	return legalMoves
 end
 
 -- recursive helper function that keeps track of the cap
 -- and adds legal moves to legalMoves "in place"
-function Board:getLegalMoves(from, legalMoves, cap)
+-- Disregards illegal moves and avoids duplicates
+function Board:getLegalMoves(from, current, legalMoves, cap)
 	-- Can the algorithm continue?
 	if cap > 0 then
-		left = (from.x + 1, from.y)
-		right = (from.x - 1, from.y)
-		up = (from.x, from.y + 1)
-		down = (from.x, from.y - 1)
+		left = (current.x + 1, current.y)
+		right = (current.x - 1, current.y)
+		up = (current.x, current.y + 1)
+		down = (current.x, current.y - 1)
 
 		-- add the four adjacent squares
-		table.insert( (legalMoves, left) = true)
-		table.insert( (legalMoves, right) = true)
-		table.insert( (legalMoves, up) = true)
-		table.insert( (legalMoves, down) = true)
+		if isLegalMove(from, left) then
+			table.insert( (legalMoves, left) = true)
+		end
 
+		if isLegalMove(from, right) then
+			table.insert( (legalMoves, right) = true)
+		end
+
+		if isLegalMove(from, up) then
+			table.insert( (legalMoves, up) = true)
+		end
+
+		if isLegalMove(from, down) then
+			table.insert( (legalMoves, down) = true)
+		end		
 		-- recursively find legal squares from each of
 		-- the four adjacent options
-		getLegalMoves(left, legalMoves, cap - 1)
-		getLegalMoves(right, legalMoves, cap - 1)
-		getLegalMoves(up, legalMoves, cap - 1)
-		getLegalMoves(down, legalMoves, cap - 1)
+		getLegalMoves(from, left, legalMoves, cap - 1)
+		getLegalMoves(from, right, legalMoves, cap - 1)
+		getLegalMoves(from, up, legalMoves, cap - 1)
+		getLegalMoves(from, down, legalMoves, cap - 1)
 	end
 end
 
