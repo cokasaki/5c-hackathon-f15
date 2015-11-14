@@ -14,13 +14,32 @@ require 'deck'
 function love.load(arg)
     love.graphics.setBlendMode("replace")
 
+    -- Cost: 2 -> 6
+    -- 
+
     deck1 = Deck({Card(1,1,1,1,"minion"),
                   Card(2,2,2,1,"minion"),
-                  Card(3,3,3,1,"minion"),})
+                  Card(3,3,3,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),})
 
-    deck2 = Deck({Card(1,1,1,2,"minion"),
-                  Card(2,2,2,2,"minion"),
-                  Card(3,3,3,2,"minion"),})
+    deck1 = Deck({Card(1,1,1,1,"minion"),
+                  Card(2,2,2,1,"minion"),
+                  Card(3,3,3,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),})
+
+
 
 
     board = Board(deck1, deck2)

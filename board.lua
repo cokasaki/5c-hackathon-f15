@@ -175,9 +175,17 @@ function Board:switchTurns()
 	if self.turn == 1 then
 		self.turn = 2
 		self.p2Mana = self.p2maxMana
+		if self.p1Hand.size() < 6 then
+			self.p1Hand:draw_card();
+		if self.p1Hand.size() < 6 then
+			self.p1Hand:draw_card();
 	else
 		self.turn = 1
 		self.p1Mana = self.p1maxMana
+		if self.p2Hand.size() < 6 then
+			board.p2Hand:draw_card();
+		if self.p2Hand.size() < 6 then
+			board.p2Hand:draw_card();
 	end
 	self.devMana = true
 	for i = 1, c.B_LENGTH.x do
