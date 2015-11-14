@@ -37,12 +37,13 @@ end
 
 -- draw the game to the screen
 function love.draw()
+    draw_board()
     if board.selected then
         draw_legal_moves()
     end
-    draw_board()
     draw_hand_one()
     draw_hand_two()
+    draw_end_turn()
     draw_res_one()
     draw_res_two()
 end
@@ -54,6 +55,8 @@ function love.mousepressed(x,y,click)
 
     if on_board(x,y) then
         board:register_click("board", get_board_index(x,y))
+    elseif on_end_turn(x,y) then
+        board:register_click("end_turn")
     elseif on_hand_one(x,y) then
         board:register_click("hand_one", get_hand_one(x,y))
     elseif on_hand_two(x,y) then
@@ -92,6 +95,15 @@ function get_board_index(x,y)
     return {x = math.ceil(b_x/c.SQ_LENGTH),
             y = math.ceil(b_y/c.SQ_LENGTH)}
 
+end
+
+-- checks to see if the click occured on the end-turn button
+function on_end_turn(x,y)
+    x_corner = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
+    y_corner = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
+
+    return x > x_corner and x < x_corner + c.SQ_LENGTH and
+           y > y_corner and y < y_corner + c.SQ_LENGTH
 end
 
 -- checks to see if the click occurred on player one's hand
@@ -190,6 +202,15 @@ function draw_board()
 
         end
     end
+end
+
+-- draws the endturn button to the screen
+function draw_end_turn()
+    x = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
+    y = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
+
+    love.graphics.setColor(colors.BUTTON)
+    love.graphics.rectangle("fill",x,y,c.SQ_LENGTH,c.SQ_LENGTH)
 end
 
 -- draws a card at a particular position

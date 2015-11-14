@@ -75,6 +75,16 @@ end
 
 function Board:getLegalMoves(from)
 	legalMoves = {}
+	for _,off in ipairs(c.TWO_RANGE) do
+		x_pos = from.x + off.x
+		y_pos = from.y + off.y
+		to = {x = x_pos,y = y_pos}
+		if self:onBoard(to) and self:isLegalMove(from,to) then
+			legalMoves[to] = true
+		end
+	end
+
+
 	-- Call recursive helper function
 	return self:getLegalMovesR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
 end
@@ -164,6 +174,10 @@ end
 
 function Board:distance(from, to)
 	return math.abs(from.x - to.x) + math.abs(from.y - to.y)
+end
+
+function Board:onBoard(point)
+	return point.x >= 1 and point.x <= c.B_LENGTH.x and point.y >= 1 and point.y <= c.B_LENGTH.y
 end
 
 function Board:isLegalMove(from, to)
