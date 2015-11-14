@@ -81,7 +81,7 @@ end
 -- and if the player whose turn it is has
 -- a card adjacent to the target square
 function Board:canSummon(target)
-	if target then
+	if self:get_card_at(target) then
 		return false
 	end
 
@@ -168,7 +168,7 @@ function Board:getLegalMoves(from)
 	return legalMoves
 end
 
-function Board:getLegalAttacks()
+function Board:getLegalAttacks(from)
 	legalAttacks = {}
 	for i=1,B_LENGTH.x do
 		for j=1,B_LENGTH.y do
@@ -185,6 +185,22 @@ function Board:getLegalAttacks()
 	return legalAttacks
 end
 
+function Board:getLegalPlacements()
+	legalAttacks = {}
+	for i=1,B_LENGTH.x do
+		for j=1,B_LENGTH.y do
+			pos = {x=i,y=j}
+			card = self:get_card_at(pos)
+			if card then
+				if card.player ~= self.turn then
+					table.insert(legalAttacks,pos)
+				end
+			end
+		end
+	end
+
+	return legalAttacks
+end
 
 
 function Board:isLegalAttack(from, target)
