@@ -191,7 +191,7 @@ end
 
 function Board:getLegalAttacks(from)
 	legalAttacks = {}
-	for _,off in ipairs(c.TWO_RANGE) do
+	for _,off in ipairs(c.ADJACENT) do
 		x_pos = from.x + off.x
 		y_pos = from.y + off.y
 		target = {x = x_pos,y = y_pos}
