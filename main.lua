@@ -98,9 +98,24 @@ end
 
 ---------------- DRAWING FUNCTIONS -------------------
 
--- draws a players hand to the screen
-function draw_hand()
+-- draws player one's resources to the screen
+function draw_res_one()
+    
+end
 
+-- draws player one's hand to the screen
+function draw_hand_one()
+    
+end
+
+-- draws player two's resources to the screen
+function draw_res_two()
+    
+end
+
+-- draws player two's hand to the screen
+function draw_hand_two()
+    
 end
 
 -- draws the board to the screen

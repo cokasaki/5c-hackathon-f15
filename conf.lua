@@ -7,8 +7,7 @@ CONFIGURATIONS FILE FOR 5C HACKATHON F15
 require "constants"
 
 function love.conf(t)
-    t.title = "LABWS: A Scatalogical Sojourn Into Space"
-    --t.version =
+    t.title = "Capital"
     t.window.width = c.SCREEN_W
     t.window.height = c.SCREEN_H
     t.modules.physics = false
