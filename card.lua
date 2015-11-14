@@ -7,11 +7,12 @@ class = require 'lib/middleclass'
 Card = class('Card')
 
 -- set the cards attributes and stats
-function Card:initialize(cost, attack, health, player)
+function Card:initialize(cost, attack, health, player, type)
 	self.cost = cost
 	self.attack = attack
 	self.health = health
 	self.player = player
+	self.type = type
 	self.max_health = health
 	self.c_attack = attack
 	self.c_health = health

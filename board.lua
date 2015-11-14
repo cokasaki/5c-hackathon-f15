@@ -13,8 +13,8 @@ function Board:initialize(deck1, deck2)
         	self.grid[i][j] = nil -- Fill the values here
     	end
 	end
-	RedLeader = Card(0, 2, 10, 1)
-	BlueLeader = Card(0, 2, 10, 2)
+	RedLeader = Card(0, 2, 10, 1, 'minion')
+	BlueLeader = Card(0, 2, 10, 2, 'minion')
 	RedLeader.canMove = true
 	RedLeader.canAttack = true
 	self.grid[1][3] = RedLeader
@@ -26,6 +26,8 @@ function Board:initialize(deck1, deck2)
 	self.p2Mana = 0
 
 	self.selected = nil
+	self.selectedType = nil
+
 	self.p1Deck = deck1
 	self.p1Hand = Hand(self.p1Deck)
 	self.p1Hand:draw_card()
@@ -41,28 +43,45 @@ end
 
 function Board:register_click(mode, target)
 	if mode == "board" then
-		if self.grid[target.x][target.y] then 
-			--We select our own unit
+		if self.selected == nil and self.grid[target.x][target.y] then
 			if self:get_card_at(target).player == self.turn then
 				self.selected = target
-			--Or we selected an enemy unit
-			elseif self.selected and self:isLegalAttack(self.selected, target) then
-					self:makeAttack(self.selected, target)
-			else
-				self.selected=nil
+				self.selectedType = "onBoard"
 			end
-		--Or tried to move
-		elseif self.selected and self:isLegalMove(self.selected, target) then
-			self:move(self.selected, target)
-		--Or we delselect
+		elseif self.selectedType == "onBoard" then
+			if self:isLegalAttack(self.selected, target) then
+				self:makeAttack(self.selected, target)
+			elseif self:isLegalMove(self.selected, target) then
+				self:move(self.selected, target)
+			else
+				self.selected = nil
+			end
+
+		elseif self.selectedType == 'fromHand' then
+			if self:canSummon(target) then
+				self:summon(card, target)
+			end
+
+--		elseif self.selectedType == 'spell'
+--			if canCast(selected, target) then
+--				self:cast(selected, target)
+--			end
 		else
 			self.selected = nil
-		end
-	
+		end 
+
+			
 	elseif mode == "hand_one" then
-		-- do nothing
+		if self.turn == 1 then
+			self.selected = self.p1Hand.cards[target]
+			self.selectedType = 'fromHand'
+		end
+
 	elseif mode == "hand_two" then
-		-- do nothing
+		if self.turn == 2 then
+			self.selected = self.p2Hand.cards[target]
+			self.selectedType = 'fromHand'
+		end
 	elseif mode == "end_turn" then
 		self:switchTurns()
 	end
@@ -89,7 +108,7 @@ end
 function Board:makeAttack(from, to)
 	attacker = self.grid[from.x][from.y]
 	defender = self.grid[to.x][to.y]
-	
+
 	defender:updateHP(-1*attacker.c_attack)
 	attacker:updateHP(-1*defender.c_attack)
 
@@ -105,6 +124,7 @@ function Board:makeAttack(from, to)
 	attacker.canMove = false
 
 	self.selected = nil
+	self.selectedType = nil
 end
 
 function Board:move(from, to)
@@ -113,6 +133,7 @@ function Board:move(from, to)
 	cardToMove.canMove = false
 	self.grid[from.x][from.y] = nil
 	self.selected = nil
+	self.selectedType = nil
 
 end
 
