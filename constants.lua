@@ -11,6 +11,8 @@ c =
     P_TWO_HAND = {y = 550},
     P_ONE_RES = {y = 100},
     P_TWO_RES = {y = 500},
+    MAX_CARDS = 6,
+    MAX_RES = 9,
 }
 
 colors =
@@ -19,4 +21,5 @@ colors =
     RED   = {255,0  ,0  ,255},
     P_ONE = {255,0  ,0  ,255},
     P_TWO = {0  ,0  ,255,255},
+    RES = {170, 170, 170, 255},
 }

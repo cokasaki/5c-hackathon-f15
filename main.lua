@@ -99,22 +99,34 @@ end
 
 -- draws player one's resources to the screen
 function draw_res_one()
+    love.graphics.setColor(colors.RES)
+    for i = 1, board.p1Mana, 1 do
+        if board.p1Mana % 2 == 0 then
+            love.graphics.circle(400 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+        else
+            love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
     
 end
 
 -- draws player one's hand to the screen
 function draw_hand_one()
-    
+    love.graphics.setColor(colors.P_ONE)
+    for i = 1, board.p1Mana, 1 do
+        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
 end
 
 -- draws player two's resources to the screen
 function draw_res_two()
-    
+    love.graphics.setColor(colors.RES) 
+    for i = 1, board.p1Mana, 1 do
+        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
 end
 
 -- draws player two's hand to the screen
 function draw_hand_two()
-    
+    love.graphics.setColor(colors.P_TWO)
+   for i = 1, board.p1Mana, 1 do
+        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
 end
 
 -- draws the board to the screen
