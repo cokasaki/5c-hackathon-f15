@@ -5,13 +5,25 @@
 gamestate = require 'lib/hump.gamestate'
 require 'constants'
 require 'board'
+require 'card'
+require 'deck'
 
 
 
 -- initialize everything at the start of the game
 function love.load(arg)
     love.graphics.setBlendMode("replace")
-    board = Board()
+
+    deck1 = Deck({Card(1,1,1,1),
+                  Card(2,2,2,1),
+                  Card(3,3,3,1),})
+
+    deck2 = Deck({Card(1,1,1,2),
+                  Card(2,2,2,2),
+                  Card(3,3,3,2),})
+
+
+    board = Board(deck1, deck2)
 end
 
 
@@ -105,14 +117,18 @@ function draw_res_one()
             love.graphics.circle(400 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
         else
             love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+        end
+    end
     
 end
 
 -- draws player one's hand to the screen
 function draw_hand_one()
     love.graphics.setColor(colors.P_ONE)
-    for i = 1, board.p1Mana, 1 do
-        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+    hand_size = board.p1Hand.size()
+    for i = 1, hand_size, 1 do
+        love.graphics.circle(375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+    end
 end
 
 -- draws player two's resources to the screen
@@ -120,13 +136,32 @@ function draw_res_two()
     love.graphics.setColor(colors.RES) 
     for i = 1, board.p1Mana, 1 do
         love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+    end
 end
 
 -- draws player two's hand to the screen
 function draw_hand_two()
     love.graphics.setColor(colors.P_TWO)
-   for i = 1, board.p1Mana, 1 do
-        love.graphics.circle(375 + (i - board.p1Mana)*50, c.P_ONE_RES.y, c.RADIUS)
+    hand_size = board.p2Hand.size()
+   for i = 1, hand_size, 1 do
+        love.graphics.circle(375 + (i - hand_size)*50, c.P_ONE_RES.y, c.RADIUS)
+    end--[[
+THE CARD CLASS
+]]
+
+class = require 'lib/middleclass'
+
+Card = class('Card')
+
+-- set the cards attributes and stats
+function Card:initialize(cost, attack, health, player)
+    self.cost = cost
+    self.attack = attack
+    self.health = health
+    self.player = player
+    self.current_attack = attack
+    self.current_health = health
+end
 end
 
 -- draws the board to the screen
@@ -143,28 +178,33 @@ function draw_board()
             love.graphics.setColor(colors.WHITE)
             love.graphics.rectangle("line",x_pos,y_pos,length,length)
 
-            -- draw anything that exists in that space
-            contents = board:get_card_at(i,j)
-            if contents then
-                -- draw a circle for the card
-                if contents.player == 1 then
-                    love.graphics.setColor(colors.P_ONE)
-                else 
-                    love.graphics.setColor(colors.P_TWO)
-                end
-                c_x = x_pos + length/2
-                c_y = y_pos + length/2
-                love.graphics.circle("fill",c_x,c_y,c.RADIUS)
-
-                -- draw the card's stats
-                att = contents.attack
-                hp = contents.health
-                stat_string = att.."/"..hp
-                love.graphics.setColor(colors.WHITE)
-                love.graphics.setBlendMode("alpha")
-                love.graphics.printf(stat_string,c_x-c.RADIUS,c_y-c.TEXT_OFFSET,2*c.RADIUS,"center")
-                love.graphics.setBlendMode("replace")
+            draw_card(i,j)
             end
         end
     end
+end
+
+-- draws a card at a particular position
+function draw_card(x,y)
+    -- draw anything that exists in that space
+    contents = board:get_card_at(x,y)
+    if contents then
+        -- draw a circle for the card
+        if contents.player == 1 then
+            love.graphics.setColor(colors.P_ONE)
+        else 
+            love.graphics.setColor(colors.P_TWO)
+        end
+        c_x = x_pos + length/2
+        c_y = y_pos + length/2
+        love.graphics.circle("fill",c_x,c_y,c.RADIUS)
+
+        -- draw the card's stats
+        att = contents.attack
+        hp = contents.health
+        stat_string = att.."/"..hp
+        love.graphics.setColor(colors.WHITE)
+        love.graphics.setBlendMode("alpha")
+        love.graphics.printf(stat_string,c_x-c.RADIUS,c_y-c.TEXT_OFFSET,2*c.RADIUS,"center")
+        love.graphics.setBlendMode("replace")
 end

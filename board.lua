@@ -1,5 +1,6 @@
 local class = require 'lib/middleclass'
 require 'card'
+require 'hand'
 require 'constants'
 
 Board = class('Board')
@@ -23,8 +24,12 @@ function Board:initialize(deck1, deck2)
 	self.p2Mana = 0
 
 	self.selected = nil
-	--self.p1Hand = Hand()
-	--self.p1Hand.draw()
+	self.p1Deck = deck1
+	self.p1Hand = Hand(self.p1Deck)
+	self.p1Hand:draw_card()
+
+	self.p2Deck = deck2
+	self.p2Hand = Hand(self.p2Deck)
 end
 
 function Board:get_card_at(x, y)
