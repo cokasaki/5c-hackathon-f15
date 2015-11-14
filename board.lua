@@ -36,9 +36,12 @@ function Board:initialize(deck1, deck2)
 	self.p1Deck = deck1
 	self.p1Hand = Hand(self.p1Deck)
 	self.p1Hand:draw_card()
+	self.p1Hand:draw_card()
+	self.p1Hand:draw_card()
 
 	self.p2Deck = deck2
 	self.p2Hand = Hand(self.p2Deck)
+	self.p2Hand:draw_card()
 	self.p2Hand:draw_card()
 	self.p2Hand:draw_card()
 
@@ -66,8 +69,8 @@ function Board:register_click(mode, target)
 				self.selectedType = nil
 			end
 
-		elseif self.selectedType == 'fromHand' then
-			if self.hand.cards[self.selected].type = 'minion'
+		elseif self.selectedType == "fromHand" then
+			if self.hand.cards[self.selected].type == 'minion' then
 				if self:canSummon(target, self.selected) then
 					self:summon(self.selected, target)
 					self.selected = nil
