@@ -40,10 +40,16 @@ function Board:register_click(mode, action)
 	if mode == "board" then
 		if (not self.selected and self.grid[action[1]][action[2]]) then
 			self.selected = action
+		
 		elseif self.selected then
-			self:move(self.selected, action)
-			self.selected = nil
+			if self:isLegalMove(self.selected, action) then
+				self:move(self.selected, action)
+			end
+			elseif self:isLegalAttack(self.selected,action) then
+				self:makeAttack(self.selected,action)
+			end
 		end
+	
 	elseif mode == "hand_one" then
 		-- do nothing
 	elseif mode == "hand_two" then
@@ -51,7 +57,46 @@ function Board:register_click(mode, action)
 	end
 end
 
+function Board:makeAttack(from, to):
+	attacker = self.grid[from.x][from.y]
+	defender = self.grid[to.x][to.y]
+	
+	defender.c_Health = defender.c_Health - attacker.c_attack
+	attacker.c_Health = attacker.c_attack - defender.c_attack
+
 function Board:move(from, to)
-	self.grid[to[1]][to[2]] = self.grid[from[1]][from[2]]
-	self.grid[from[1]][from[2]] = nil
+	self.grid[to.x][to.y] = self.grid[from.x][from.y]
+	self.grid[from.x][from.y = nil
+end
+
+function Board:getLegalMoves(from)
+	return getLegalMoves(from, {}, 2)
+end
+
+-- Helper function
+function Board:getLegalMoves(from, legalMoves, cap)
+	to = (from.x + 1, from.y)
+	table.insert(legalMoves
+	to = (from.x, from.y)
+	to = (from.x + 1, from.y)
+	to = (from.x + 1, from.y)
+end
+
+function Board:isLegalAttack(from, target)
+	return math.abs(from.x - target.x) == 1 or math.abs(from.y - target.y) == 1
+end
+
+function Board:distance(from, to)
+	return math.abs(from.x - to.x) + math.abs(from.y - to.y)
+end
+
+function Board:isLegalMove(from, to)
+	distance = self.distance(from, to)
+	if distance >= 1 and distance <=2 and self.grid[to.x][to.y] == nil then
+		return true
+	else
+		return false
+	-- Make sure that to ~= from
+	-- Check to see if to is occupied
+	-- Make sure that distance <= 2
 end

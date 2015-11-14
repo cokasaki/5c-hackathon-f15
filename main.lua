@@ -82,7 +82,7 @@ function get_board_index(x,y)
     b_x = x - c.B_POS.x
     b_y = y - c.B_POS.y
 
-    return {math.ceil(b_x/c.SQ_LENGTH),math.ceil(b_y/c.SQ_LENGTH)}
+    return {x = math.ceil(b_x/c.SQ_LENGTH),y = math.ceil(b_y/c.SQ_LENGTH)}
 
 end
 
