@@ -41,7 +41,7 @@ function love.draw()
         if board.selected_type == "on_board" then
             draw_legal_moves()
             draw_legal_attacks()
-        elseif board.selected_type == "summon" then
+        elseif board.selected_type == "from_hand" then
             draw_legal_placements()
         elseif board.selected_type == "spell" then
             draw_legal_targets(board.selected)
