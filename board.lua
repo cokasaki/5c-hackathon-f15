@@ -35,16 +35,29 @@ function Board:register_click(mode, action)
 	if mode == "board" then
 		if (not self.selected and grid[action[1]][action[2]]) then
 			self.selected = action
+		
 		elseif self.selected then
-			self:move(self.selected, action)
-			self.selected = nil
+			if self:isLegalMove(self.selected, action) then
+				self:move(self.selected, action)
+			end
+			elseif self:isLegalAttack(self.selected,action) then
+				self:makeAttack(self.selected,action)
+			end
 		end
+	
 	elseif mode == "hand_one" then
 		-- do nothing
 	elseif mode == "hand_two" then
 		-- do nothing
 	end
 end
+
+function Board:makeAttack(from, to):
+	attacker = self.grid[from.x][from.y]
+	defender = self.grid[to.x][to.y]
+	
+	defender.c_Health = defender.c_Health - attacker.c_attack
+	attacker.c_Health = attacker.c_attack - defender.c_attack
 
 function Board:move(from, to)
 	self.grid[to[1]][to[2]] = self.grid[from[1]][from[2]]

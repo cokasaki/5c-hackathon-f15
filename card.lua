@@ -12,6 +12,6 @@ function Card:initialize(cost, attack, health, player)
 	self.attack = attack
 	self.health = health
 	self.player = player
-	self.current_attack = attack
-	self.current_health = health
+	self.c_attack = attack
+	self.c_health = health
 end
