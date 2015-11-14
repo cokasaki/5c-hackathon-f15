@@ -12,13 +12,17 @@ function love.load(arg)
     board = 0
     p_one = 0
     p_two = 0
+    click_record = {nil,nil}
 end
 
 
 
 -- update the game through a timestep 'dt'
 function love.update(dt)
-    -- do nothing
+    if click_record[1] and click_record[2] then
+        board.try_turn(click_record)
+        click_record = {nil,nil}
+    end
 end
 
 
@@ -33,21 +37,53 @@ end
 -- registers a click of the mous
 function love.mousepressed(x,y,click)
 
-    if y < c.B_POS.y + c.B_LENGTH*c.SQ_LENGTH and y > c.B_POS.y then
-
+    if on_board(x,y) then
+        if not click_record[1] then
+            click_record[1] = get_board_index(x,y)
+        elseif not click_record[2] then
+            click_record[2] = get_board_index(x,y)
+        end
     end
+
 end
 
 
 ------------- MISCELLANEOUS FUNCTIONS ----------------
 
 -- checks to see if the click occurred on the board
-function try_board(x,y)
+function on_board(x,y)
+
+    if x < c.B_POS.x then
+        return false
+    elseif x > c.B_POS.x + c.B_LENGTH.x*c.SQ_LENGTH then
+        return false
+    elseif y < c.B_POS.y then
+        return false
+    elseif y > c.B_POS.y + c.B_LENGTH.y*c.SQ_LENGTH then
+        return false
+    end
+
+    return true
 
 end
 
+-- gets the indices corresponding to a click on the board
+function get_board_index(x,y)
+
+    b_x = x - c.B_POS.x
+    b_y = y - c.B_POS.y
+
+    return {math.ceil(b_x/c.SQ_LENGTH),math.ceil(b_y/c.SQ_LENGTH)}
+    
+end
+
 -- checks to see if the click occurred on a hand
-function try_hand(x,y)
+function on_hand(x,y)
+
+end
+
+-- gets the index corresponding to a click on a hand
+function get_hand_index(x,y)
 
 end
 
