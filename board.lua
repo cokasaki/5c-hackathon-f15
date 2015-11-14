@@ -28,6 +28,8 @@ function Board:initialize(deck1, deck2)
 	self.p1Mana = 6
 	self.p2Mana = 6
 
+	self.devMana = false
+
 	self.selected = nil
 	self.selectedType = nil
 
@@ -83,14 +85,24 @@ function Board:register_click(mode, target)
 			
 	elseif mode == "hand_one" then
 		if self.turn == 1 then
-			self.selected = target
-			self.selectedType = 'fromHand'
+			if self.selected == target and self.devMana and self.p1maxMana < 9 then
+				self.p1maxMana = self.p1maxMana + 1
+				self.devMana = false
+			else
+				self.selected = target
+				self.selectedType = 'fromHand'
+			end
 		end
 
 	elseif mode == "hand_two" then
 		if self.turn == 2 then
-			self.selected = target
-			self.selectedType = 'fromHand'
+			if self.selected == target and self.devMana and self.p1maxMana < 9 then
+				self.p2maxMana = self.p2maxMana + 1
+				self.devMana = false
+			else
+				self.selected = target
+				self.selectedType = 'fromHand'
+			end
 		end
 	elseif mode == "end_turn" then
 		self:switchTurns()
@@ -121,9 +133,13 @@ function Board:canSummon(target, cardIndex)
 	if self.turn == 1 then
 		if self.p1Hand[cardIndex].cost > self.p1Mana then
 			return false
+		end
 	else
 		if self.p2Hand[cardIndex].cost > self.p2Mana then
 			return false
+		end
+	end
+
 	if self:get_card_at(target) then
 		return false
 	end
@@ -155,6 +171,7 @@ function Board:switchTurns()
 		self.turn = 1
 		self.p1Mana = self.p1maxMana
 	end
+	self.devMana = true
 	for i = 1, c.B_LENGTH.x do
     	for j = 1, c.B_LENGTH.y do
        		if self.grid[i][j] then
