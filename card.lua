@@ -15,14 +15,14 @@ function Card:initialize(cost, attack, health, player)
 	self.max_health = health
 	self.c_attack = attack
 	self.c_health = health
+	self.canMove = false
+	self.canAttack = false
 end
 
 function Card:updateHP(val)
 	self.c_health = self.c_health + val
-	if self.c_health < 1 then
-		self = nil
-	elseif self.c_health > self.max_health then
-		self.c_health = self.smax_health
+	if self.c_health > self.max_health then
+		self.c_health = self.max_health
 	end
 end
 
