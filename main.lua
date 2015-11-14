@@ -28,16 +28,16 @@ function love.load(arg)
                   Card(1,1,1,1,"minion"),
                   Card(1,1,1,1,"minion"),})
 
-    deck1 = Deck({Card(1,1,1,1,"minion"),
-                  Card(2,2,2,1,"minion"),
-                  Card(3,3,3,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),})
+    deck2 = Deck({Card(1,1,1,2,"minion"),
+                  Card(2,2,2,2,"minion"),
+                  Card(3,3,3,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),})
 
 
 
