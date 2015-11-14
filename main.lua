@@ -14,13 +14,13 @@ require 'deck'
 function love.load(arg)
     love.graphics.setBlendMode("replace")
 
-    deck1 = Deck({Card(1,1,1,1),
-                  Card(2,2,2,1),
-                  Card(3,3,3,1),})
+    deck1 = Deck({Card(1,1,1,1,"minion"),
+                  Card(2,2,2,1,"minion"),
+                  Card(3,3,3,1,"minion"),})
 
-    deck2 = Deck({Card(1,1,1,2),
-                  Card(2,2,2,2),
-                  Card(3,3,3,2),})
+    deck2 = Deck({Card(1,1,1,2,"minion"),
+                  Card(2,2,2,2,"minion"),
+                  Card(3,3,3,2,"minion"),})
 
 
     board = Board(deck1, deck2)
@@ -42,18 +42,14 @@ function love.draw()
             draw_legal_moves()
             draw_legal_attacks()
         elseif board.selectedType == "fromHand" then
-            if board.turn then
+            if board.turn == 1 then
                 hand = board.p1Hand
             else 
                 hand = board.p2Hand
             end
 
-            print(hand)
-
             if hand.cards[board.selected].type == "minion" then
                 draw_legal_placements()
-            -- else 
-            --     draw_legal_targets(board.selected)
             end
         end
     end

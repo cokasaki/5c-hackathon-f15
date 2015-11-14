@@ -58,11 +58,14 @@ function Board:register_click(mode, target)
 				self:move(self.selected, target)
 			else
 				self.selected = nil
+				self.selectedType = nil
 			end
 
 		elseif self.selectedType == 'fromHand' then
 			if self:canSummon(target) then
 				self:summon(self.selected, target)
+				self.selected = nil
+				self.selectedType = nil
 			end
 
 --		elseif self.selectedType == 'spell'
@@ -71,6 +74,7 @@ function Board:register_click(mode, target)
 --			end
 		else
 			self.selected = nil
+			self.selectedType = nil
 		end 
 
 			
@@ -212,20 +216,22 @@ end
 
 function Board:getLegalPlacements()
 	legalPlacements = {}
-	for i=1,B_LENGTH.x do
-		for j=1,B_LENGTH.y do
+	for i=1,c.B_LENGTH.x do
+		for j=1,c.B_LENGTH.y do
 			pos = {x=i,y=j}
 			card = self:get_card_at(pos)
 			if not card then
 				for _,off in ipairs(c.ADJACENT) do
-					x_pos = from.x + off.x
-					y_pos = from.y + off.y
+					x_pos = pos.x + off.x
+					y_pos = pos.y + off.y
 					adj = {x = x_pos,y = y_pos}
-					adjCard = self:get_card_at(adj)
-					if adjCard then
-						if adjCard.player == self.turn then
-							table.insert(legalPlacements,adj)
-							break
+					if self:onBoard(adj) then
+						adjCard = self:get_card_at(adj)
+						if adjCard then
+							if adjCard.player == self.turn then
+								table.insert(legalPlacements,pos)
+								break
+							end
 						end
 					end
 				end
