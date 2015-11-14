@@ -4,6 +4,7 @@
 -- IMPORT ANY NECESSARY FILES/PACKAGES
 gamestate = require 'lib/hump.gamestate'
 require 'constants'
+require 'board'
 
 
 
@@ -131,7 +132,7 @@ function draw_board()
             love.graphics.rectangle("line",x_pos,y_pos,length,length)
 
             -- draw anything that exists in that space
-            contents = board.get_card_at(i,j)
+            contents = board:get_card_at(i,j)
             if contents then
                 -- draw a circle for the card
                 if contents.player == 1 then
@@ -145,7 +146,7 @@ function draw_board()
 
                 -- draw the card's stats
                 att = contents.attack
-                def = contents.def
+                def = contents.health
                 love.graphics.printf(att.."/"..def,c_x-c.RADIUS,c_y,2*c.RADIUS,"center")
             end
         end

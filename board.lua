@@ -2,12 +2,13 @@ local class = require 'lib/middleclass'
 require 'card'
 require 'constants'
 
+Board = class('Board')
 
 function Board:initialize(deck1, deck2)
 	self.grid = {}
-	for i = 1, B_LENGTH.x do
+	for i = 1, c.B_LENGTH.x do
     	self.grid[i] = {}
-    	for j = 1, B_LENGTH.y do
+    	for j = 1, c.B_LENGTH.y do
         	self.grid[i][j] = nil -- Fill the values here
     	end
 	end
@@ -26,14 +27,26 @@ function Board:initialize(deck1, deck2)
 	--self.p1Hand.draw()
 end
 
-function get_Card_At(x, y)
+function Board:get_card_at(x, y)
 	return self.grid[x][y]
 end
 
-function registerClick(mode, action)
-	return
+function Board:register_click(mode, action)
+	if mode == "board" then
+		if (not self.selected and grid[action[1]][action[2]]) then
+			self.selected = action
+		elseif self.selected then
+			self:move(self.selected, action)
+			self.selected = nil
+		end
+	elseif mode == "hand_one" then
+		-- do nothing
+	elseif mode == "hand_two" then
+		-- do nothing
+	end
 end
 
-function move(from_x, from_y, to_x,to_y )
-	self.grid[to_x][to_y] = self.grid[from_x][from_y]
+function Board:move(from, to)
+	self.grid[to[1]][to[2]] = self.grid[from[1]][from[2]]
+	self.grid[from[1]][from[2]] = nil
 end

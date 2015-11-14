@@ -2,6 +2,8 @@
 THE CARD CLASS
 ]]
 
+class = require 'lib/middleclass'
+
 Card = class('Card')
 
 -- set the cards attributes and stats
