@@ -176,6 +176,7 @@ function Board:distance(from, to)
 end
 
 function Board:isLegalMove(from, to)
+	return self:isLegalMoveR({x = from.x, y = from.y}, {x = from.x, y = from.y}, legalMoves, 2)
 	dist = self:distance(from, to)
 	if dist >= 1 and dist <=2 and not self.grid[to.x][to.y] then
 		return true
@@ -185,4 +186,8 @@ function Board:isLegalMove(from, to)
 	-- Make sure that to ~= from
 	-- Check to see if to is occupied
 	-- Make sure that distance <= 2
+end
+
+function Board:isLegalMoveR(from, to, current, cap)
+
 end
