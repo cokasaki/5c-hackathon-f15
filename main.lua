@@ -146,8 +146,12 @@ function draw_board()
 
                 -- draw the card's stats
                 att = contents.attack
-                def = contents.health
-                love.graphics.printf(att.."/"..def,c_x-c.RADIUS,c_y,2*c.RADIUS,"center")
+                hp = contents.health
+                stat_string = att.."/"..hp
+                love.graphics.setColor(colors.WHITE)
+                love.graphics.setBlendMode("alpha")
+                love.graphics.printf(stat_string,c_x-c.RADIUS,c_y-c.TEXT_OFFSET,2*c.RADIUS,"center")
+                love.graphics.setBlendMode("replace")
             end
         end
     end

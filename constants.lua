@@ -5,6 +5,7 @@ c =
     B_POS = {x = 150,y = 150},
     SQ_LENGTH = 50,
     RADIUS = 20,
+    TEXT_OFFSET = 7,
     B_LENGTH = {x = 9, y = 5},
     P_ONE_HAND = {y = 50},
     P_TWO_HAND = {y = 550},
