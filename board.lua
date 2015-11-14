@@ -94,19 +94,19 @@ function Board:getLegalMoves(from, current, legalMoves, cap)
 
 		-- add the four adjacent squares
 		if isLegalMove(from, left) then
-			table.insert( (legalMoves, left) = true)
+			table.insert( legalMoves, (from, left) = true)
 		end
 
 		if isLegalMove(from, right) then
-			table.insert( (legalMoves, right) = true)
+			table.insert( legalMoves, (from, right) = true)
 		end
 
 		if isLegalMove(from, up) then
-			table.insert( (legalMoves, up) = true)
+			table.insert( legalMoves, (from, up) = true)
 		end
 
 		if isLegalMove(from, down) then
-			table.insert( (legalMoves, down) = true)
+			table.insert( legalMoves, (from, down) = true)
 		end		
 		-- recursively find legal squares from each of
 		-- the four adjacent options
