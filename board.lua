@@ -36,20 +36,24 @@ function Board:get_card_at(point)
 	return self.grid[point.x][point.y]
 end
 
-function Board:register_click(mode, action)
+function Board:register_click(mode, target)
 	if mode == "board" then
-		if (not self.selected and self.grid[action.x][action.y]) then
-			self.selected = action
-		
-		elseif self.selected then
-			if self.selected == action then
-				self.selected = nil
-			elseif self:isLegalMove(self.selected, action) then
-				self:move(self.selected, action)
-			elseif self:isLegalAttack(self.selected,action) then
-				self:makeAttack(self.selected,action)
+
+
+		if self.grid.get_card_at(target).player then 
+			--We select our own unit
+			if self.grid.get_card_at(target).player == self.turn then
+				self.selected = target
+			--Or we selected an enemy unit
+			elseif self.selected and isLegalAttack(self.selected, target) then
+					self.makeAttack(self.selected, target)
 			end
 
+		--Or tried to move
+		elseif self.selected and isLegalMove(self.selected, target) then
+			self.move(self.selected, target)
+		--Or we delselect
+		else
 			self.selected = nil
 		end
 	
@@ -66,11 +70,14 @@ function Board:makeAttack(from, to)
 	
 	defender.c_health = defender.c_health - attacker.c_attack
 	attacker.c_health = attacker.c_health - defender.c_attack
+
+	self.selected = nil
 end
 
 function Board:move(from, to)
 	self.grid[to.x][to.y] = self.grid[from.x][from.y]
 	self.grid[from.x][from.y] = nil
+	self.selected = nil
 end
 
 function Board:getLegalMoves(from)
