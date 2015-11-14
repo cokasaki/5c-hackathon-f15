@@ -13,8 +13,8 @@ function Board:initialize(deck1, deck2)
         	self.grid[i][j] = nil -- Fill the values here
     	end
 	end
-	RedLeader = Card(0, 2, 10, 1, 'minion')
-	BlueLeader = Card(0, 2, 10, 2, 'minion')
+	RedLeader = Card(0, 2, 10, 1, 'summoner')
+	BlueLeader = Card(0, 2, 10, 2, 'summoner')
 	RedLeader.canMove = true
 	RedLeader.canAttack = true
 	self.grid[1][3] = RedLeader
@@ -67,7 +67,7 @@ function Board:register_click(mode, target)
 			end
 
 		elseif self.selectedType == 'fromHand' then
-			if self:canSummon(self.selected, target) then
+			if self:canSummon(target, self.selected) then
 				self:summon(self.selected, target)
 				self.selected = nil
 				self.selectedType = nil
@@ -133,11 +133,11 @@ end
 -- a card adjacent to the target square
 function Board:canSummon(target, cardIndex)
 	if self.turn == 1 then
-		if self.p1Hand[cardIndex].cost > self.p1Mana then
+		if self.p1Hand.cards[cardIndex].cost > self.p1Mana then
 			return false
 		end
 	else
-		if self.p2Hand[cardIndex].cost > self.p2Mana then
+		if self.p2Hand.cards[cardIndex].cost > self.p2Mana then
 			return false
 		end
 	end
@@ -166,6 +166,8 @@ function Board:canSummon(target, cardIndex)
 end
 
 function Board:switchTurns()
+	self.selected = nil
+	self.selectedType = nil
 	if self.turn == 1 then
 		self.turn = 2
 		self.p2Mana = self.p2maxMana
@@ -241,7 +243,7 @@ function Board:getLegalAttacks(from)
 		y_pos = from.y + off.y
 		target = {x = x_pos,y = y_pos}
 		if self:isLegalAttack(from, target) then
-			table.insert(legalAttacks,pos)
+			table.insert(legalAttacks,target)
 		end
 	end
 

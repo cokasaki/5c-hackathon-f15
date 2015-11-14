@@ -40,7 +40,7 @@ function love.draw()
     if board.selectedType then
         if board.selectedType == "onBoard" then
             draw_legal_moves()
-            draw_legal_attacks()
+            --draw_legal_attacks()
         elseif board.selectedType == "fromHand" then
             if board.turn == 1 then
                 hand = board.p1Hand
@@ -48,7 +48,8 @@ function love.draw()
                 hand = board.p2Hand
             end
 
-            if hand.cards[board.selected].type == "minion" then
+            if hand.cards[board.selected].type == "minion" or 
+               hand.cards[board.selected].type == "summoner" then
                 draw_legal_placements()
             end
         end
@@ -350,7 +351,12 @@ function draw_card(x,y,card)
     else 
         love.graphics.setColor(colors.P_TWO)
     end
-    love.graphics.circle("fill",x,y,c.RADIUS)
+
+    if card.type == "minion" then
+        love.graphics.circle("fill",x,y,c.RADIUS)
+    elseif card.type == "summoner" then
+        love.graphics.rectangle("fill",x-c.SQ_LENGTH/2+1,y-c.SQ_LENGTH/2+1,c.SQ_LENGTH-2,c.SQ_LENGTH-2)
+    end
 
     -- draw the card's stats
     att = card.attack
