@@ -60,6 +60,32 @@ function Board:makeAttack(from, to):
 	attacker.c_Health = attacker.c_attack - defender.c_attack
 
 function Board:move(from, to)
-	self.grid[to[1]][to[2]] = self.grid[from[1]][from[2]]
-	self.grid[from[1]][from[2]] = nil
+	self.grid[to.x][to.y] = self.grid[from.x][from.y]
+	self.grid[from.x][from.y = nil
+end
+
+function Board:getLegalMoves(from)
+	legalMoves = {}
+
+end
+
+-- Helper function
+function Board:getLegalMoves(from, cap)
+
+end
+
+
+function Board:distance(from, to)
+	return math.abs(from.x - to.x) + math.abs(from.y - to.y)
+end
+
+function Board:isLegalMove(from, to)
+	distance = self.distance(from, to)
+	if distance >= 1 and distance <=2 and self.grid[to.x][to.y] == nil then
+		return true
+	else
+		return false
+	-- Make sure that to ~= from
+	-- Check to see if to is occupied
+	-- Make sure that distance <= 2
 end
