@@ -36,9 +36,12 @@ function Board:initialize(deck1, deck2)
 	self.p1Deck = deck1
 	self.p1Hand = Hand(self.p1Deck)
 	self.p1Hand:draw_card()
+	self.p1Hand:draw_card()
+	self.p1Hand:draw_card()
 
 	self.p2Deck = deck2
 	self.p2Hand = Hand(self.p2Deck)
+	self.p2Hand:draw_card()
 	self.p2Hand:draw_card()
 	self.p2Hand:draw_card()
 
@@ -81,8 +84,8 @@ function Board:register_click(mode, target)
 				end
 
 			else --handle spell
-				if canCast(target, self.selected) then
-					cast(self.selected, target)
+				if self:canCast(target, self.selected) then
+					self:cast(self.selected, target)
 				end
 			self.selected = nil
 			self.selectedType = nil
@@ -184,16 +187,21 @@ function Board:cast(index, target)
 	-- check cost
 	if self.turn == 1 then
 		hand = self.p1Hand
+		spellCard = hand.cards[index]
+		self.p1Mana = self.p1Mana - spellCard.cost
 	else
 		hand = self.p2Hand
+		spellCard = hand.cards[index]
+		self.p2Mana = self.p2Mana - spellCard.cost
 	end
-	spellCard = hand.cards[index]
 	targetCard = self.grid[target.x][target.y]
 	targetCard.attack = targetCard.attack + spellCard.attack
-	targetCard.health = targetCard.health + spellCard.health
+	targetCard.max_health = targetCard.max_health + spellCard.max_health
+	targetCard.c_health = targetCard.c_health + spellCard.health
 	
 	hand:remove_card(index)
 	self.selected = nil
+	self.selectedType = nil
 end
 
 -- Returns true if the spot target is empty

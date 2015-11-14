@@ -18,26 +18,32 @@ function love.load(arg)
     -- 
 
     deck1 = Deck({Card(1,1,1,1,"minion"),
-                  Card(2,2,2,1,"minion"),
+                  Card(2,2,2,1,"spell"),
+                  Card(2,2,2,1,"spell"),
                   Card(3,3,3,1,"minion"),
                   Card(1,1,1,1,"minion"),
+                  Card(2,2,2,1,"spell"),
+                  Card(1,1,1,1,"minion"),
+                  Card(1,1,1,1,"minion"),
+                  Card(2,2,2,1,"spell"),
                   Card(1,1,1,1,"minion"),
                   Card(1,1,1,1,"minion"),
                   Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),
-                  Card(1,1,1,1,"minion"),})
+                  Card(1,1,1,1,"spell"),})
 
     deck2 = Deck({Card(1,1,1,2,"minion"),
-                  Card(2,2,2,2,"minion"),
+                  Card(2,2,2,2,"spell"),
+                  Card(2,2,2,2,"spell"),
                   Card(3,3,3,2,"minion"),
                   Card(1,1,1,2,"minion"),
+                  Card(2,2,2,2,"spell"),
+                  Card(1,1,1,2,"minion"),
+                  Card(1,1,1,2,"minion"),
+                  Card(2,2,2,2,"spell"),
                   Card(1,1,1,2,"minion"),
                   Card(1,1,1,2,"minion"),
                   Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"minion"),
-                  Card(1,1,1,2,"minion"),})
+                  Card(1,1,1,2,"spell"),})
 
     board = Board(deck1, deck2)
 end
@@ -144,8 +150,8 @@ function on_end_turn(x,y)
     x_corner = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
     y_corner = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
 
-    return x > x_corner and x < x_corner + c.SQ_LENGTH and
-           y > y_corner and y < y_corner + c.SQ_LENGTH
+    return x > x_corner and x < (x_corner + c.SQ_LENGTH) and
+           y > y_corner and y < (y_corner + c.SQ_LENGTH)
 end
 
 -- checks to see if the click occurred on player one's hand
@@ -404,6 +410,8 @@ function draw_card(x,y,card)
 
     if card.type == "minion" then
         love.graphics.circle("fill",x,y,c.RADIUS)
+    elseif card.type == "spell" then
+        love.graphics.polygon("line",x+c.SQ_LENGTH/2.35,y,x,y+c.SQ_LENGTH/2.35,x-c.SQ_LENGTH/2.35,y,x,y-c.SQ_LENGTH/2.35)
     elseif card.type == "summoner" then
         love.graphics.rectangle("fill",x-c.SQ_LENGTH/2+1,y-c.SQ_LENGTH/2+1,c.SQ_LENGTH-2,c.SQ_LENGTH-2)
     end
