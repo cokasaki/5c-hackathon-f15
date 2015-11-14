@@ -18,8 +18,8 @@ function Hand:draw_card()
     end
 end
 
-function Hand:remove_card(card)
-    table.remove(self.cards, card)
+function Hand:remove_card(card_index)
+    table.remove(self.cards, card_index)
 end
 
 function Hand:size()

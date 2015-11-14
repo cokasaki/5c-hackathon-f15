@@ -62,7 +62,7 @@ function Board:register_click(mode, target)
 
 		elseif self.selectedType == 'fromHand' then
 			if self:canSummon(target) then
-				self:summon(card, target)
+				self:summon(self.selected, target)
 			end
 
 --		elseif self.selectedType == 'spell'
@@ -76,13 +76,13 @@ function Board:register_click(mode, target)
 			
 	elseif mode == "hand_one" then
 		if self.turn == 1 then
-			self.selected = self.p1Hand.cards[target]
+			self.selected = target
 			self.selectedType = 'fromHand'
 		end
 
 	elseif mode == "hand_two" then
 		if self.turn == 2 then
-			self.selected = self.p2Hand.cards[target]
+			self.selected = target
 			self.selectedType = 'fromHand'
 		end
 	elseif mode == "end_turn" then
@@ -91,9 +91,16 @@ function Board:register_click(mode, target)
 end
 
 
-function Board:summon(card, target)
-	self.selected = nil
+function Board:summon(index, target)
+	if self.turn == 1 then
+		hand = self.p1Hand
+	else 
+		hand = self.p2Hand
+	end
+	card = hand.cards[index]
 	self.grid[target.x][target.y] = card
+	hand:remove_card(index)
+	self.selected = nil
 end
 
 -- Returns true if the spot target is empty
@@ -105,8 +112,8 @@ function Board:canSummon(target)
 	end
 
 	for _,off in ipairs(c.ADJACENT) do
-		x_pos = from.x + off.x
-		y_pos = from.y + off.y
+		x_pos = target.x + off.x
+		y_pos = target.y + off.y
 		to = {x = x_pos,y = y_pos}
 		if self:onBoard(to) then
 			-- Avoids trying to access member variable of nil variable
