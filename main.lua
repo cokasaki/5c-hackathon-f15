@@ -37,6 +37,12 @@ end
 
 -- draw the game to the screen
 function love.draw()
+
+    if board.winner > 0 then
+        draw_winner(board.winner)
+        return
+    end
+
     if board.selectedType then
         if board.selectedType == "onBoard" then
             draw_legal_moves()
@@ -189,9 +195,14 @@ end
 -- draws player one's resources to the screen
 function draw_res_one()
     love.graphics.setColor(colors.RES)
-    positions = get_sym_pos(board.p1Mana,c.P_ONE_RES.y)
-    for _,pos in ipairs(positions) do
+    positions = get_sym_pos(board.p1maxMana,c.P_ONE_RES.y)
+    for i=1,board.p1Mana do
+        pos = positions[i]
         love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
+    end
+    for i=board.p1Mana+1,board.p1maxMana do
+        pos = positions[i]
+        love.graphics.circle("line", pos.x, pos.y, c.RADIUS)
     end
 end
 
@@ -220,9 +231,14 @@ end
 -- draws player two's resources to the screen
 function draw_res_two()
     love.graphics.setColor(colors.RES)
-    positions = get_sym_pos(board.p2Mana,c.P_TWO_RES.y)
-    for _,pos in ipairs(positions) do
+    positions = get_sym_pos(board.p2maxMana,c.P_TWO_RES.y)
+    for i=1,board.p2Mana do
+        pos = positions[i]
         love.graphics.circle("fill", pos.x, pos.y, c.RADIUS)
+    end
+    for i=board.p2Mana+1,board.p2maxMana do
+        pos = positions[i]
+        love.graphics.circle("line", pos.x, pos.y, c.RADIUS)
     end
 end
 
@@ -346,14 +362,18 @@ end
 -- draws the endturn button to the screen
 function draw_end_turn()
     x = c.B_POS.x + (c.B_LENGTH.x+1)*c.SQ_LENGTH
-    y = c.B_POS.y + (1/2)*c.B_LENGTH.y*c.SQ_LENGTH
-
-    love.graphics.setColor(colors.BUTTON)
-    love.graphics.rectangle("fill",x,y,c.SQ_LENGTH,c.SQ_LENGTH)
+    y = c.B_POS.y + (1/2)*(c.B_LENGTH.y-1)*c.SQ_LENGTH
+ 
+    if board.turn == 1 then
+        love.graphics.setColor(colors.P_ONE)
+    else
+        love.graphics.setColor(colors.P_TWO)
+    end
+    love.graphics.rectangle("line",x,y,c.SQ_LENGTH,c.SQ_LENGTH)
     love.graphics.setColor(colors.WHITE)
     love.graphics.setColor(colors.WHITE)
     love.graphics.setBlendMode("alpha")
-    love.graphics.printf("END TURN",x,y+(1/4)*c.SQ_LENGTH,c.SQ_LENGTH,"center")
+    love.graphics.printf("END TURN",x,y+(4.5/20)*c.SQ_LENGTH,c.SQ_LENGTH,"center")
     love.graphics.setBlendMode("replace")
 end
 
@@ -394,4 +414,16 @@ function draw_card_on_grid(x_off,y_off,pos)
         draw_card(c_x,c_y,contents)
     end
 end
+
+function draw_winner(winner)
+    if winner == 1 then
+        love.graphics.printf("PLAYER ONE WINS", 0, c.SCREEN_H/2, c.SCREEN_W, "center")
+    elseif winner == 2 then
+        love.graphics.printf("PLAYER ONE WINS", 0, c.SCREEN_H/2, c.SCREEN_W, "center")
+    else
+        love.graphics.printf("I'M TIRED AND THIS GAME IS TIED", 0, c.SCREEN_H/2, c.SCREEN_W, "center")
+    end
+end
+
+
 
