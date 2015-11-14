@@ -88,7 +88,9 @@ function Board:register_click(mode, target)
 			if self.selected == target and self.devMana and self.p1maxMana < 9 then
 				self.p1maxMana = self.p1maxMana + 1
 				self.devMana = false
-				self.p1hand.cards.remove_card(target)
+				self.p1Hand:remove_card(target)
+				board.selected = nil
+				board.selectedType = nil
 			else
 				self.selected = target
 				self.selectedType = 'fromHand'
@@ -100,7 +102,9 @@ function Board:register_click(mode, target)
 			if self.selected == target and self.devMana and self.p1maxMana < 9 then
 				self.p2maxMana = self.p2maxMana + 1
 				self.devMana = false
-				self.p1hand.cards.remove_card(target)
+				self.p2Hand:remove_card(target)
+				board.selected = nil
+				board.selectedType = nil
 			else
 				self.selected = target
 				self.selectedType = 'fromHand'
