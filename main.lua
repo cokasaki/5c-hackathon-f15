@@ -10,9 +10,7 @@ require 'constants'
 -- initialize everything at the start of the game
 function love.load(arg)
     love.graphics.setBlendMode("replace")
-    board = 0
-    p_one = 0
-    p_two = 0
+    board = Board()
 end
 
 
